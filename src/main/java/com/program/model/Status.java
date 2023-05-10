@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Status {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="status_id")
@@ -22,9 +22,9 @@ public class Status {
 	private List<Event> events=new ArrayList<>();
 
 	@ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "categoryId")
+	@JoinColumn(name = "categoryId")
 	@JsonIgnore
-    private Category category;
+	private Category category;
 
 	public Status(Integer statusId, String statusName, String statusCategory, List<Event> events, Category category) {
 		this.statusId = statusId;

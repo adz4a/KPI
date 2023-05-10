@@ -52,36 +52,6 @@ public class UserController {
         return new ResponseEntity<List<User>>(users,HttpStatus.OK);
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<String> loginUser(@RequestParam("email") String email, @RequestParam("password") String password) throws UserException {
-        if (email == null || password == null) {
-            return new ResponseEntity<>("No credentials specified", HttpStatus.BAD_REQUEST);
-        }
-        User user = userService.getUserByEmail(email);
-
-        if (user != null && user.getPassword().equals(password)) {
-            int token = tokenHelper.generateToken(user);
-            return new ResponseEntity<>("Authorization successful. Here's your token: " + token, HttpStatus.OK);
-        }
-
-        return new ResponseEntity<>("Bad credentials", HttpStatus.BAD_REQUEST);
-    }
-
-    @GetMapping("/profile")
-    public HttpEntity<? extends Object> getUser(@RequestHeader int token) {
-        User user = tokenHelper.getUserByToken(token);
-        if (user == null) {
-            return new ResponseEntity<>("Token expired", HttpStatus.UNAUTHORIZED);
-        }
-        return new ResponseEntity<User>(user, HttpStatus.OK);
-    }
-
-    @GetMapping("/logout")
-    public ResponseEntity<String> logout(@RequestHeader int token) {
-        String msg = "Bye, " + tokenHelper.getUserByToken(token).getEmail() + "!";
-        tokenHelper.deleteToken(token);
-        return new ResponseEntity<>(msg, HttpStatus.OK);
-    }
 
 
     @GetMapping("/user/getById/{Id}")

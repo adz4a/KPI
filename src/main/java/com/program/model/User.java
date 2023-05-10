@@ -30,8 +30,7 @@ public class User {
     @Length(min = 5, message = "{user.password.length}")
     private String password;
 
-    private String categoryName;
-    private String statusName;
+
 
 //    @ManyToOne(cascade = CascadeType.PERSIST)
 //    @JoinColumn(name = "statusId")
@@ -49,12 +48,7 @@ public class User {
     @JsonIgnore
     private List<Role> roles;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_events",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "status_id"))
 
-    private List<Event> events;
 
     @JsonIgnore
     public boolean isAdmin() {
@@ -62,11 +56,11 @@ public class User {
         return roles.stream().map(Role::getRole).anyMatch(roleName::equals);
     }
 
-    @JsonIgnore
-    public boolean isUser() {
-        String roleName = "USER";
-        return roles.stream().map(Role::getRole).anyMatch(roleName::equals);
-    }
+//    @JsonIgnore
+//    public boolean isUser() {
+//        String roleName = "TEACHER";
+//        return roles.stream().map(Role::getRole).anyMatch(roleName::equals);
+//    }
 
     @JsonIgnore
     public boolean isObserver() {
@@ -119,21 +113,6 @@ public class User {
         this.password = password;
     }
 
-    public String getCategoryName() {
-        return categoryName;
-    }
-
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
-    }
-
-    public String getStatusName() {
-        return statusName;
-    }
-
-    public void setStatusName(String statusName) {
-        this.statusName = statusName;
-    }
 
     public List<Role> getRoles() {
         return roles;
@@ -143,23 +122,13 @@ public class User {
         this.roles = roles;
     }
 
-    public List<Event> getEvents() {
-        return events;
-    }
 
-    public void setEvents(List<Event> events) {
-        this.events = events;
-    }
-
-    public User(Integer userId, String email, String name, String password, String categoryName, String statusName, List<Role> roles, List<Event> events) {
+    public User(Integer userId, String email, String name, String password, List<Role> roles, List<Event> events) {
         this.userId = userId;
         this.email = email;
         this.name = name;
         this.password = password;
-        this.categoryName = categoryName;
-        this.statusName = statusName;
         this.roles = roles;
-        this.events = events;
     }
 
     @Override
@@ -170,16 +139,13 @@ public class User {
         return Objects.equals(userId, user.userId) &&
                 email.equals(user.email) &&
                 name.equals(user.name) &&
-                categoryName.equals(user.categoryName) &&
-                statusName.equals(user.statusName) &&
                 password.equals(user.password) &&
-                Objects.equals(events, user.events) &&
                 Objects.equals(roles, user.roles);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, email, name, password,categoryName, statusName,events, roles);
+        return Objects.hash(userId, email, name, password, roles);
     }
 
     @Override
@@ -189,10 +155,7 @@ public class User {
                 ", email='" + email + '\'' +
                 ", name='" + name + '\'' +
                 ", password='" + password + '\'' +
-                ", categoryName='" + categoryName + '\'' +
-                ", statusName='" + statusName + '\'' +
 //                ", roles=" + roles +
-                ", events=" + events +
                 '}';
     }
 }

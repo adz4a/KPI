@@ -31,30 +31,30 @@ public class  CategoryServiceImpl implements CategoryService {
 	public Category addNewCategory(Category category) throws CategoryException {
 		
 
-		
-		List<Status> status = category.getStatuses();
-		
-		if(!status.isEmpty()) {
-			for(Status p: status) {
-				p.setCategory(category);
-			}
-		}
-		Category addCategory= categoryRepository.save(category);
-		
-		if(addCategory != null) {
-			return addCategory;
-		}
-		else {
-			throw new CategoryException("Product details is Empty...");
-		}
-		
+//
+//		List<Status> status = category.getStatuses();
+//
+//		if(!status.isEmpty()) {
+//			for(Status p: status) {
+//				p.setCategory(category);
+//			}
+//		}
+//		Category addCategory= categoryRepository.save(category);
+//
+//		if(addCategory != null) {
+//			return addCategory;
+//		}
+//		else {
+//			throw new CategoryException("Product details is Empty...");
+//		}
+			return null;
 		}
 	
 	@Override
 	public Category updateCategoryById(Category category) throws CategoryException {
 		
 			Optional<Category> opt = categoryRepository.findById(category.getCategoryId());
-			
+
 			if (opt.isPresent())
 			{
 				Category c1 = categoryRepository.save(category);

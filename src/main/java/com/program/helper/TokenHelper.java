@@ -1,12 +1,19 @@
 package com.program.helper;
 
+import com.program.model.Teacher;
 import com.program.model.User;
 
 public interface TokenHelper {
 
-    int generateToken(User user);
+    int generateTokenForUser(User user);
 
-    void deleteToken(int token);
+    void deleteTokenForUser(int token);
 
     User getUserByToken(int token);
+
+    int generateTokenForTeacher(Teacher teacher);
+
+    void deleteTokenForTeacher(int token);
+
+    Teacher getTeacherByToken(int token);
 }

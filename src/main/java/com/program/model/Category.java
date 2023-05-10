@@ -6,17 +6,16 @@ import javax.persistence.*;
 
 @Entity
 public class Category {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="category_id")
 	private Integer categoryId;
-	
+
 	private String categoryName;
 
-	
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "category")
 
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "category")
 	private List<Status> statuses =new ArrayList<>();
 
 
