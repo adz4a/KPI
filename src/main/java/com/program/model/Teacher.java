@@ -1,12 +1,13 @@
 package com.program.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 public class Teacher {
@@ -29,10 +30,13 @@ public class Teacher {
     private String categoryName;
     private String statusName;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_events",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "status_id"))
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "statusId")
+//    @JsonIgnore
+    private Status status;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "statusId")
     private List<Event> events;
 
 
@@ -84,26 +88,75 @@ public class Teacher {
         this.statusName = statusName;
     }
 
-    public List<Event> getEvents() {
-        return events;
+//    public List<Status> getStatuses() {
+//        return statuses;
+//    }
+//
+//    public void setStatuses(List<Status> statuses) {
+//        this.statuses = statuses;
+//    }
+
+    public Integer getStatus() {
+        return status.getStatusId();
+    }
+
+    public List<Event> getEventsByStatus() {
+        return status.getEvents();
     }
 
     public void setEvents(List<Event> events) {
         this.events = events;
     }
 
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    //    public List<Event> getEvents() {
+//        List<Event> matchingEvents = new ArrayList<>();
+//        Integer status = getStatus();
+//        for (Event event : events) {
+//            if (event.getStatusId().equals(status)) {
+//                matchingEvents.add(event);
+//            }
+//        }
+//        return matchingEvents;
+//    }
+//
+
+
+
     public Teacher() {
         super();
     }
 
-    public Teacher(Integer teacherId, String email, String name, String password, String categoryName, String statusName, List<Event> events) {
+    public Teacher(Integer teacherId, String email, String name, String password, String categoryName, String statusName, Status status) {
         this.teacherId = teacherId;
         this.email = email;
         this.name = name;
         this.password = password;
         this.categoryName = categoryName;
         this.statusName = statusName;
-        this.events = events;
+        this.status = status;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Teacher teacher = (Teacher) o;
+        return Objects.equals(teacherId, teacher.teacherId) &&
+                Objects.equals(email, teacher.email) &&
+                Objects.equals(name, teacher.name) &&
+                Objects.equals(password, teacher.password) &&
+                Objects.equals(categoryName, teacher.categoryName) &&
+                Objects.equals(statusName, teacher.statusName) &&
+                Objects.equals(status, teacher.status);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(teacherId, email, name, password, categoryName, statusName, status);
     }
 
     @Override
@@ -115,7 +168,9 @@ public class Teacher {
                 ", password='" + password + '\'' +
                 ", categoryName='" + categoryName + '\'' +
                 ", statusName='" + statusName + '\'' +
-                ", events=" + events +
+                ", status=" + status +
                 '}';
     }
+
+
 }

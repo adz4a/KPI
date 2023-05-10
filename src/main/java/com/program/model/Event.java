@@ -72,6 +72,10 @@ public class Event {
         this.status = status;
     }
 
+    public Integer getStatusId(){
+        return status.getStatusId();
+    }
+
     @Override
     public String toString() {
         return "Event{" +
