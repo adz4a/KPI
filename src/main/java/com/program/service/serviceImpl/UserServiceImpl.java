@@ -48,9 +48,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getUsersByRoleUser() throws UserException {
+    public List<User> getUsersByRoleTeacher() throws UserException {
         List<User> users = userRepository.findAll();
-        users.removeIf(User::isAdmin);
+        users.removeIf(user -> user.isAdmin() && user.isObserver());
         return users;
     }
 

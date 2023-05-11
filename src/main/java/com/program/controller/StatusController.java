@@ -22,7 +22,6 @@ import com.program.service.StatusService;
 @RestController
 public class StatusController {
 
-	
 	@Autowired
 	public StatusService statusService;
 	
@@ -30,7 +29,7 @@ public class StatusController {
 	public StatusRepository statusRepository;
 
 		
-		@GetMapping("/allstatus")
+		@GetMapping("/statuses")
 		public ResponseEntity<List<Status>> getAllStatus() throws StatusException
 		{
 			List<Status> status =	statusService.getAllStatus();

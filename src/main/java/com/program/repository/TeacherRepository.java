@@ -1,17 +1,17 @@
 package com.program.repository;
 
 import com.program.model.Teacher;
-import com.program.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface TeacherRepository extends JpaRepository<Teacher, Integer> {
 
-//    Teacher save(Integer teacherId);
-//    Teacher findByRole(String categoryName, String statusName);
-
-    Teacher findByEmail(String email);
-
+    @Query("SELECT t FROM Teacher t WHERE t.user.userId = :userId")
+    Teacher findByUserId(Integer userId);
 
 }

@@ -53,7 +53,6 @@ public class UserController {
     }
 
 
-
     @GetMapping("/user/getById/{Id}")
     public ResponseEntity<User> getCategoryById(@PathVariable("Id") Integer id ) throws UserException {
         User user1 = userService.getUserById(id);

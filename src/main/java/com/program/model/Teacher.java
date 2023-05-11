@@ -1,11 +1,8 @@
 package com.program.model;
 
-import org.hibernate.validator.constraints.Length;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -17,28 +14,17 @@ public class Teacher {
     @Column(name = "teacher_id")
     private Integer teacherId;
 
-    @Email(message = "{teacher.email.not.valid}")
-    @NotEmpty(message = "{teacher.email.not.empty}")
-    @Column(unique = true)
-    private String email;
-    @NotEmpty(message = "{teacher.name.not.empty}")
-    private String name;
-    @NotEmpty(message = "{teacher.password.not.empty}")
-    @Length(min = 5, message = "{teacher.password.length}")
-    private String password;
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "userId")
+    @JsonIgnore
+    private User user;
 
     private String categoryName;
     private String statusName;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "statusId")
-//    @JsonIgnore
     private Status status;
-
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "statusId")
-    private List<Event> events;
-
 
     public Integer getTeacherId() {
         return teacherId;
@@ -48,29 +34,6 @@ public class Teacher {
         this.teacherId = teacherId;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 
     public String getCategoryName() {
         return categoryName;
@@ -88,25 +51,32 @@ public class Teacher {
         this.statusName = statusName;
     }
 
-//    public List<Status> getStatuses() {
-//        return statuses;
-//    }
-//
-//    public void setStatuses(List<Status> statuses) {
-//        this.statuses = statuses;
-//    }
-
     public Integer getStatus() {
         return status.getStatusId();
     }
 
+    public String getUserName() {
+        return user.getName();
+    }
+
+    public String getUserEmail() {
+        return user.getEmail();
+    }
+
+    @JsonIgnore
+    public Integer getUserIdTeacher() {
+        return user.getUserId();
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+//    @JsonIgnore
     public List<Event> getEventsByStatus() {
         return status.getEvents();
     }
 
-    public void setEvents(List<Event> events) {
-        this.events = events;
-    }
 
     public void setStatus(Status status) {
         this.status = status;
@@ -124,17 +94,13 @@ public class Teacher {
 //    }
 //
 
-
-
     public Teacher() {
         super();
     }
 
-    public Teacher(Integer teacherId, String email, String name, String password, String categoryName, String statusName, Status status) {
+    public Teacher(Integer teacherId, User user, String categoryName, String statusName, Status status) {
         this.teacherId = teacherId;
-        this.email = email;
-        this.name = name;
-        this.password = password;
+        this.user = user;
         this.categoryName = categoryName;
         this.statusName = statusName;
         this.status = status;
@@ -145,32 +111,26 @@ public class Teacher {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Teacher teacher = (Teacher) o;
-        return Objects.equals(teacherId, teacher.teacherId) &&
-                Objects.equals(email, teacher.email) &&
-                Objects.equals(name, teacher.name) &&
-                Objects.equals(password, teacher.password) &&
-                Objects.equals(categoryName, teacher.categoryName) &&
-                Objects.equals(statusName, teacher.statusName) &&
-                Objects.equals(status, teacher.status);
+        return Objects.equals(teacherId, teacher.teacherId)
+                && Objects.equals(user, teacher.user)
+                && Objects.equals(categoryName, teacher.categoryName)
+                && Objects.equals(statusName, teacher.statusName)
+                && Objects.equals(status, teacher.status);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(teacherId, email, name, password, categoryName, statusName, status);
+        return Objects.hash(teacherId, user, categoryName, statusName, status);
     }
 
     @Override
     public String toString() {
         return "Teacher{" +
                 "teacherId=" + teacherId +
-                ", email='" + email + '\'' +
-                ", name='" + name + '\'' +
-                ", password='" + password + '\'' +
+                ", user=" + user +
                 ", categoryName='" + categoryName + '\'' +
                 ", statusName='" + statusName + '\'' +
                 ", status=" + status +
                 '}';
     }
-
-
 }

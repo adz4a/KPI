@@ -41,7 +41,7 @@ public class User {
 
 
 
-    @ManyToMany(cascade = CascadeType.MERGE)
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
@@ -50,21 +50,21 @@ public class User {
 
 
 
-    @JsonIgnore
+//    @JsonIgnore
     public boolean isAdmin() {
-        String roleName = "ADMIN";
+        String roleName = "Admin";
         return roles.stream().map(Role::getRole).anyMatch(roleName::equals);
     }
 
 //    @JsonIgnore
-//    public boolean isUser() {
-//        String roleName = "TEACHER";
-//        return roles.stream().map(Role::getRole).anyMatch(roleName::equals);
-//    }
+    public boolean isTeacher() {
+        String roleName = "Teacher";
+        return roles.stream().map(Role::getRole).anyMatch(roleName::equals);
+    }
 
     @JsonIgnore
     public boolean isObserver() {
-        String roleName = "OBSERVER";
+        String roleName = "Observer";
         return roles.stream().map(Role::getRole).anyMatch(roleName::equals);
     }
 

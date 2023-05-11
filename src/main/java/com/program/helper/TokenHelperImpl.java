@@ -3,14 +3,18 @@ package com.program.helper;
 import com.program.model.Teacher;
 import com.program.model.User;
 import org.springframework.stereotype.Service;
+import org.springframework.util.MultiValueMap;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 @Service
 public class TokenHelperImpl implements TokenHelper{
 
     HashMap<Integer, User> tokensUserMap = new HashMap<>();
-    HashMap<Integer, Teacher> tokensTeacherMap = new HashMap<>();
+
 
     @Override
     public int generateTokenForUser(User user) {
@@ -28,19 +32,5 @@ public class TokenHelperImpl implements TokenHelper{
         return tokensUserMap.get(token);
     }
 
-    @Override
-    public int generateTokenForTeacher(Teacher teacher) {
-        tokensTeacherMap.put(teacher.hashCode(), teacher);
-        return teacher.hashCode();
-    }
 
-    @Override
-    public void deleteTokenForTeacher(int token) {
-        tokensTeacherMap.remove(token);
-    }
-
-    @Override
-    public Teacher getTeacherByToken(int token) {
-        return tokensTeacherMap.get(token);
-    }
 }

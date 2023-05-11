@@ -13,7 +13,7 @@ public interface UserService {
 
     List<User> findAll() throws UserException;
 
-    List<User> getUsersByRoleUser() throws UserException;
+    List<User> getUsersByRoleTeacher() throws UserException;
 
     User getUserByEmail(String email) throws UserException;
 

@@ -10,6 +10,7 @@ public interface TeacherService {
 
     List<Teacher> findAllTeacher() throws TeacherException;
 
-    Teacher getTeacherByEmail(String email) throws TeacherException;
+//    Teacher getTeacherByEmail(String email) throws TeacherException;
+    Teacher getTeacherById(Integer id) throws TeacherException;
 
 }

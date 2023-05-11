@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class TeacherServiceImpl implements TeacherService {
@@ -15,13 +16,21 @@ public class TeacherServiceImpl implements TeacherService {
     @Autowired
     private TeacherRepository teacherRepository;
 
+    private Teacher teacher;
+
     @Override
     public List<Teacher> findAllTeacher() throws TeacherException {
         return teacherRepository.findAll();
     }
 
+//    @Override
+//    public Teacher getTeacherByEmail(String email) throws TeacherException {
+//        return teacherRepository.findByEmail(email);
+//    }
+
     @Override
-    public Teacher getTeacherByEmail(String email) throws TeacherException {
-        return teacherRepository.findByEmail(email);
+    public Teacher getTeacherById(Integer id) throws TeacherException {
+
+        return teacherRepository.findByUserId(id);
     }
 }
