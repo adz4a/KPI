@@ -56,9 +56,9 @@ public class CategoryController {
 		}
 		
 		@DeleteMapping("/category/delete/{Id}")
-		public ResponseEntity<Category> deleteCategoryById(@PathVariable ("Id") Integer id) throws CategoryException{
-			Category category1=categoryservice.deleteCategoryById(id);
-			return new ResponseEntity<Category>(category1,HttpStatus.OK);
+		public ResponseEntity<Object> deleteCategoryById(@PathVariable ("Id") Integer id) throws CategoryException{
+			categoryservice.deleteCategoryById(id);
+			return new ResponseEntity<>("Category with this id deleted",HttpStatus.OK);
 		}
 		
 

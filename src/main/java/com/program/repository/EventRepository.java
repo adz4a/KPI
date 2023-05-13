@@ -18,8 +18,6 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
     @Query("SELECT e FROM Event e WHERE e.status.statusId = :statusId")
     List<Event> findByStatusId(Integer statusId);
 
-    @Query("SELECT e FROM Event e WHERE e.status = :status")
-    List<Event> getEventsStatus(Status status);
 
     @Modifying
     @Query("UPDATE Event e SET e.status = null WHERE e.status.statusId = :statusId")
@@ -28,6 +26,10 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
     @Modifying
     @Query("DELETE FROM Event e WHERE e.status.statusId = :statusId")
     void deleteByStatusId(Integer statusId);
+
+    @Modifying
+    @Query("DELETE FROM Event e WHERE e.eventId = :eventId")
+    void deleteByEventId(Integer eventId);
 
 
 //    @Query("SELECT e FROM Event e WHERE e.status.statusId = :statusId")

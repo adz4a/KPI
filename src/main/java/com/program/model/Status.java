@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-
 
 @Entity
 public class Status {

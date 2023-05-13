@@ -1,10 +1,8 @@
 package com.program.service.serviceImpl;
 
-
 import java.util.List;
 import java.util.Optional;
 
-import com.program.exception.StatusException;
 import com.program.model.Event;
 import com.program.model.Status;
 import com.program.model.Teacher;
@@ -108,7 +106,7 @@ public class  CategoryServiceImpl implements CategoryService {
 	}
 
 	@Override
-	public Category deleteCategoryById(Integer id) throws CategoryException {
+	public void deleteCategoryById(Integer id) throws CategoryException {
 		Optional<Category> opt = categoryRepository.findById(id);
 		if (opt.isPresent()) {
 			Category existingCategory = opt.get();
@@ -119,22 +117,21 @@ public class  CategoryServiceImpl implements CategoryService {
 					List<Teacher> teachers = teacherRepository.findByStatusId(status.getStatusId());
 					if (!events.isEmpty()){
 						for (Event event : events)
-//						Delete
+//							Delete
 							eventRepository.deleteByStatusId(status.getStatusId());
 					}
 					if (!teachers.isEmpty()){
 						for (Teacher teacher : teachers) {
-//						Set null
+//							Set null
 							teacherRepository.resetStatusByStatusId(status.getStatusId());
 						}
 					}
 				}
 				statusRepository.deleteByCategoryId(id);
 			} else {
-				return null;
+				throw new CategoryException("Statuses with this id empty");
 			}
 			categoryRepository.deleteByCategoryId(id);
-			return null;
 		} else {
 			throw new CategoryException("Category does not exist with Id :" + id);
 		}

@@ -1,13 +1,8 @@
 package com.program.controller;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
-import com.program.model.Category;
-import com.program.model.Event;
 import com.program.model.Status;
-import com.program.model.Teacher;
 import com.program.repository.CategoryRepository;
 import com.program.repository.EventRepository;
 import com.program.repository.TeacherRepository;
@@ -37,21 +32,12 @@ public class StatusController {
 	public StatusRepository statusRepository;
 
 
-	@Autowired
-	public CategoryRepository categoryRepository;
-
-	@Autowired
-	public TeacherRepository teacherRepository;
-
-	@Autowired
-	public EventRepository eventRepository;
-
 		
 		@GetMapping("/statuses")
-		public ResponseEntity<List<Status>> getAllStatus() throws StatusException
+		public ResponseEntity<List<Status>> getAllStatuses() throws StatusException
 		{
-			List<Status> status =	statusService.getAllStatus();
-			return new ResponseEntity<List<Status>>(status,HttpStatus.OK);
+			List<Status> statuses =	statusService.getAllStatus();
+			return new ResponseEntity<List<Status>>(statuses,HttpStatus.OK);
 		}
 		
 		@PostMapping("/status/add")
@@ -86,7 +72,7 @@ public class StatusController {
 		@DeleteMapping("/status/delete/{Id}")
 		public ResponseEntity<String> deleteStatusById(@PathVariable ("Id") Integer id ) throws StatusException {
 			statusService.deleteStatusById(id);
-			return new ResponseEntity<String>("Status deleted",HttpStatus.OK);
+			return new ResponseEntity<String>("Status with this Id deleted",HttpStatus.OK);
 
 		}
 

@@ -1,10 +1,8 @@
 package com.program.service.serviceImpl;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
-import com.program.exception.CategoryException;
 import com.program.model.Category;
 import com.program.model.Event;
 import com.program.model.Status;
@@ -14,7 +12,6 @@ import com.program.repository.EventRepository;
 import com.program.repository.TeacherRepository;
 import com.program.service.StatusService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.program.exception.StatusException;
@@ -78,9 +75,8 @@ public class StatusServiceImpl implements StatusService {
 		}
 		else {
 			throw new StatusException("Status does not exist with Id :"+PId);
-			
+
 		}
-		
 	}
 
 	@Override
@@ -93,42 +89,43 @@ public class StatusServiceImpl implements StatusService {
 		if (optionalStatus.isEmpty()) {
 			throw new StatusException("Status with ID " + id + " does not exist.");
 		}
+
 		Status existingStatus = optionalStatus.get();
 //		Setter
-		existingStatus.setStatusCategory(status.getStatusCategory());
 		existingStatus.setStatusName(status.getStatusName());
-		existingStatus.setEvents(status.getEvents());
 
 		List<Event> events = eventRepository.findByStatusId(existingStatus.getStatusId());
 		List<Teacher> teachers = teacherRepository.findByStatusId(existingStatus.getStatusId());
 		if (!events.isEmpty()){
 			for (Event event : events)
-//						Setter
+//				Setter
 				event.setEventStatus(existingStatus.getStatusName());
 		}
 		if (!teachers.isEmpty()){
 			for (Teacher teacher : teachers) {
-//						Setter
+//				Setter
 				teacher.setStatusName(existingStatus.getStatusName());
 			}
 		}
 
 		Category category = categoryRepository.findByName(status.getStatusCategory());
 		if (category != null) {
+//			Setter
 			existingStatus.setCategory(category);
+			existingStatus.setStatusCategory(status.getStatusCategory());
 			if (!events.isEmpty()){
 				for (Event event : events)
-//						Setter
+//					Setter
 					event.setEventCategory(existingStatus.getStatusCategory());
 			}
 			if (!teachers.isEmpty()){
 				for (Teacher teacher : teachers) {
-//						Setter
+//					Setter
 					teacher.setCategoryName(existingStatus.getStatusCategory());
 				}
 			}
 		} else {
-			existingStatus.setCategory(null);
+			throw new StatusException("Category with name " + status.getStatusName() + " doesn't exist!");
 		}
 
 		return statusRepository.save(existingStatus);
@@ -137,26 +134,17 @@ public class StatusServiceImpl implements StatusService {
 
 	
 	@Override
-	public Status deleteStatusById(Integer id) throws StatusException {
+	public void deleteStatusById(Integer id) throws StatusException {
 
 		Optional<Status> opt = statusRepository.findById(id);
 		if (opt.isPresent()) {
 			teacherRepository.resetStatusByStatusId(id);
 			eventRepository.deleteByStatusId(id);
 			statusRepository.deleteByStatusId(id);
-			return null;
 		} else {
 			throw new StatusException("Status does not exist with Id :" + id);
 		}
 			
 	}
-
-
-
-
-
-
-
-
 	
 }

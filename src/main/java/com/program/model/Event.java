@@ -73,6 +73,7 @@ public class Event {
         return status;
     }
 
+    @JsonIgnore
     public Integer getStatusId(){
         return status.getStatusId();
     }

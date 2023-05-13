@@ -2,7 +2,6 @@ package com.program.service;
 
 import com.program.exception.UserException;
 import com.program.model.User;
-
 import java.util.List;
 
 public interface UserService {

@@ -1,5 +1,6 @@
 package com.program.repository;
 
+import com.program.model.Category;
 import com.program.model.Status;
 import com.program.model.Teacher;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,6 +19,12 @@ public interface StatusRepository extends  JpaRepository<Status, Integer> {
 
 	@Query("SELECT s FROM Status s WHERE s.category.categoryId = :categoryId")
 	List<Status> findByCategoryId(Integer categoryId);
+
+	@Query("SELECT s FROM Status s WHERE s.statusId = :statusId")
+	Status findByStatusId(Integer statusId);
+
+	@Query("SELECT s FROM Status s WHERE s.statusCategory = :categoryName and s.statusName = :statusName")
+	Status findByCategoryAndStatusName(String categoryName, String statusName);
 
 	@Modifying
 	@Query("DELETE FROM Status s WHERE s.statusId = :statusId")
