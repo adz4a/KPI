@@ -51,10 +51,6 @@ public class Teacher {
         this.statusName = statusName;
     }
 
-    public Integer getStatus() {
-        return status.getStatusId();
-    }
-
     public String getUserName() {
         return user.getName();
     }
@@ -72,27 +68,18 @@ public class Teacher {
         this.user = user;
     }
 
-//    @JsonIgnore
     public List<Event> getEventsByStatus() {
+        if (status!= null){
         return status.getEvents();
+        }
+        else
+            return null;
     }
 
 
     public void setStatus(Status status) {
         this.status = status;
     }
-
-    //    public List<Event> getEvents() {
-//        List<Event> matchingEvents = new ArrayList<>();
-//        Integer status = getStatus();
-//        for (Event event : events) {
-//            if (event.getStatusId().equals(status)) {
-//                matchingEvents.add(event);
-//            }
-//        }
-//        return matchingEvents;
-//    }
-//
 
     public Teacher() {
         super();

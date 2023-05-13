@@ -1,12 +1,20 @@
 package com.program.controller;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
+import com.program.model.Category;
+import com.program.model.Event;
 import com.program.model.Status;
+import com.program.model.Teacher;
+import com.program.repository.CategoryRepository;
+import com.program.repository.EventRepository;
+import com.program.repository.TeacherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,6 +36,16 @@ public class StatusController {
 	@Autowired
 	public StatusRepository statusRepository;
 
+
+	@Autowired
+	public CategoryRepository categoryRepository;
+
+	@Autowired
+	public TeacherRepository teacherRepository;
+
+	@Autowired
+	public EventRepository eventRepository;
+
 		
 		@GetMapping("/statuses")
 		public ResponseEntity<List<Status>> getAllStatus() throws StatusException
@@ -36,12 +54,17 @@ public class StatusController {
 			return new ResponseEntity<List<Status>>(status,HttpStatus.OK);
 		}
 		
-		@PostMapping("/createstatus")
-		public ResponseEntity<Status> addNewStatus(@RequestBody Status status, Model m) throws StatusException
+		@PostMapping("/status/add")
+		public HttpEntity<? extends Object> addNewStatus(@RequestBody Status status) throws StatusException
 		{
 			Status status1 = statusService.addNewStatus(status);
-			System.out.println(status);
-			return new ResponseEntity<Status>(status1, HttpStatus.OK);
+
+			if (status1==null) {
+				return new ResponseEntity<String>("Status details is empty or category which you indicated does not exist!", HttpStatus.OK);
+			}
+			else {
+				return new ResponseEntity<Status>(status1, HttpStatus.OK);
+			}
 		}
 		
 		@GetMapping("/status/getById/{Id}")
@@ -51,16 +74,22 @@ public class StatusController {
 		}
 		
 		@PutMapping("/status/update/{id}")
-		public ResponseEntity<Status> updateStatusById(@PathVariable("Id") Integer id) throws StatusException {
-			Status status1 =	statusService.updateStatusById(id);
-			return new ResponseEntity<Status>(status1,HttpStatus.OK);
+		public ResponseEntity<Object> updateStatusById(@PathVariable Integer id,@RequestBody Status status) throws StatusException {
+			try {
+				Status updatedStatus = statusService.updateStatusById(id, status);
+				return ResponseEntity.ok(updatedStatus);
+			} catch (StatusException e) {
+				return ResponseEntity.badRequest().body(e.getMessage());
+			}
 		}
 		
 		@DeleteMapping("/status/delete/{Id}")
-		public ResponseEntity<Status> deleteStatusById(@PathVariable ("Id") Integer id ) throws StatusException {
-			Status status1 =statusService.deleteStatusById(id);
-			return new ResponseEntity<Status>(status1,HttpStatus.OK);
+		public ResponseEntity<String> deleteStatusById(@PathVariable ("Id") Integer id ) throws StatusException {
+			statusService.deleteStatusById(id);
+			return new ResponseEntity<String>("Status deleted",HttpStatus.OK);
+
 		}
+
 
 	
 }

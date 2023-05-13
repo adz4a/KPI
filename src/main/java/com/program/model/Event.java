@@ -7,7 +7,7 @@ import javax.persistence.*;
 public class Event {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "event_id")
     private Integer eventId;
 
@@ -68,8 +68,9 @@ public class Event {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public Status setStatus(Status status) {
         this.status = status;
+        return status;
     }
 
     public Integer getStatusId(){

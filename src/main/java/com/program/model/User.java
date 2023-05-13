@@ -1,14 +1,11 @@
 package com.program.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.swagger.models.auth.In;
 import org.hibernate.validator.constraints.Length;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 

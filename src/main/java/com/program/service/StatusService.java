@@ -13,9 +13,9 @@ public interface StatusService {
 
 	  Status addNewStatus(Status status)throws StatusException;
 
-	  Status getStatusById(Integer PId)throws StatusException;
+	  Status getStatusById(Integer Id)throws StatusException;
 
-	  Status updateStatusById(Integer id) throws StatusException;
+	  Status updateStatusById(Integer id, Status status) throws StatusException;
 
 	  Status deleteStatusById(Integer Id) throws StatusException;
 

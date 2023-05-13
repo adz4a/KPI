@@ -25,5 +25,4 @@ public interface UserService {
 
     void deleteUser(Integer id) throws UserException;
 
-//    User getUserEventsById(Integer id) throws UserException;
 }

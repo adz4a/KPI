@@ -1,8 +1,7 @@
 package com.program.service.serviceImpl;
 
-import com.program.exception.CategoryException;
+
 import com.program.exception.UserException;
-import com.program.model.Category;
 import com.program.model.Role;
 import com.program.model.User;
 import com.program.repository.RoleRepository;
@@ -59,7 +58,6 @@ public class UserServiceImpl implements UserService {
     public User createUser(User user) throws UserException {
         user.setPassword(user.getPassword());
         Role userRole = roleRepository.findByRole(USER);
-        //add degree_____________________________________________________________
         user.setRoles(new ArrayList<>(Collections.singletonList(userRole)));
         return userRepository.save(user);
     }
@@ -85,8 +83,7 @@ public class UserServiceImpl implements UserService {
 
         if (opt.isPresent())
         {
-            User user1 = userRepository.save(user);
-            return user1;
+            return userRepository.save(user);
         }else {
             throw new UserException("Category with given id is not present........");
         }
@@ -95,15 +92,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(Integer id) throws UserException {
         User user = userRepository.getOne(id);
-//        user.getTasksOwned().forEach(task -> task.setOwner(null));
         userRepository.delete(user);
     }
 
-//    @Override
-//    public User getUserEvents(Integer id) throws UserException {
-//
-//        Optional<User> opt = userRepository.findById(id);
-//
-////        if (opt.stream().anyMatch(user -> ))
-//    }
 }

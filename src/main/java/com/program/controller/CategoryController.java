@@ -26,22 +26,21 @@ public class CategoryController {
 	public CategoryService categoryservice;
 	
 	@Autowired
-	public CategoryRepository categorydao;
+	public CategoryRepository categoryRepository;
 
 		@GetMapping("/categories")
 		public ResponseEntity<List<Category>> getAllCategories() throws CategoryException{
-		List<Category> categorys =	categoryservice.getAllCategories();
-			return new ResponseEntity<List<Category>>(categorys,HttpStatus.OK);
+		List<Category> categories =	categoryservice.getAllCategories();
+			return new ResponseEntity<List<Category>>(categories,HttpStatus.OK);
 		}
 		
-		
+
 		@PostMapping("/category/add")
 		public ResponseEntity<Category> addNewCategory (@RequestBody Category category) throws CategoryException  
 		{
 			Category category1 = categoryservice.addNewCategory(category);
 			System.out.println(category);
 			return new ResponseEntity<Category>(category1, HttpStatus.OK);
-			
 		}
 		
 		@GetMapping("/category/getById/{Id}")
@@ -51,14 +50,13 @@ public class CategoryController {
 		}
 		
 		@PutMapping("/category/update/{id}")
-		public ResponseEntity<Category> updateCategoryById(@RequestBody Category category) throws CategoryException{
-			Category category1=	categoryservice.updateCategoryById(category);
-
+		public ResponseEntity<Category> updateCategoryById(@PathVariable Integer id,@RequestBody Category category) throws CategoryException{
+			Category category1=	categoryservice.updateCategoryById(id, category);
 			return new ResponseEntity<Category>(category1,HttpStatus.OK);
 		}
 		
 		@DeleteMapping("/category/delete/{Id}")
-		public ResponseEntity<Category> deleteCategoryById(@PathVariable ("Id") Integer id ) throws CategoryException{
+		public ResponseEntity<Category> deleteCategoryById(@PathVariable ("Id") Integer id) throws CategoryException{
 			Category category1=categoryservice.deleteCategoryById(id);
 			return new ResponseEntity<Category>(category1,HttpStatus.OK);
 		}

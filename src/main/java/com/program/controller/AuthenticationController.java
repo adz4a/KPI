@@ -1,11 +1,8 @@
 package com.program.controller;
 
-import com.program.exception.TeacherException;
 import com.program.exception.UserException;
 import com.program.helper.TokenHelper;
-import com.program.model.Teacher;
 import com.program.model.User;
-import com.program.service.TeacherService;
 import com.program.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

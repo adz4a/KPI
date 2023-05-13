@@ -23,14 +23,9 @@ public class TeacherServiceImpl implements TeacherService {
         return teacherRepository.findAll();
     }
 
-//    @Override
-//    public Teacher getTeacherByEmail(String email) throws TeacherException {
-//        return teacherRepository.findByEmail(email);
-//    }
 
     @Override
     public Teacher getTeacherById(Integer id) throws TeacherException {
-
         return teacherRepository.findByUserId(id);
     }
 }

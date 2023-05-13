@@ -1,9 +1,7 @@
 package com.program.controller;
 
 
-import com.program.exception.CategoryException;
 import com.program.exception.TeacherException;
-import com.program.model.Category;
 import com.program.model.Teacher;
 import com.program.service.TeacherService;
 import com.program.service.UserService;
@@ -12,9 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.util.List;
 
 

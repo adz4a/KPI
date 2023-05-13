@@ -4,13 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 
 @Entity
 public class Status {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="status_id")
 	private Integer statusId;
 
@@ -21,18 +23,12 @@ public class Status {
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "status")
 	private List<Event> events=new ArrayList<>();
 
+
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "categoryId")
 	@JsonIgnore
 	private Category category;
 
-	public Status(Integer statusId, String statusName, String statusCategory, List<Event> events, Category category) {
-		this.statusId = statusId;
-		this.statusName = statusName;
-		this.statusCategory = statusCategory;
-		this.events = events;
-		this.category = category;
-	}
 
 	public Status() {
 		super();
@@ -72,6 +68,10 @@ public class Status {
 		this.category = category;
 	}
 
+	public void setCategoryId(Integer categoryId) {
+		this.category.setCategoryId(categoryId);
+	}
+
 	public List<Event> getEvents() {
 		return events;
 	}
@@ -80,16 +80,8 @@ public class Status {
 		this.events = events;
 	}
 
-	@Override
-	public String toString() {
-		return "Status{" +
-				"statusId=" + statusId +
-				", statusName='" + statusName + '\'' +
-				", statusCategory='" + statusCategory + '\'' +
-				", events=" + events +
-				", category=" + category +
-				'}';
-	}
+
+
 }
 		
 
