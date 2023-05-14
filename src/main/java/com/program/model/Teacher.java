@@ -1,6 +1,7 @@
 package com.program.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 import java.util.List;
@@ -26,6 +27,7 @@ public class Teacher {
     @JoinColumn(name = "statusId")
     private Status status;
 
+    @JsonProperty("teacher_id")
     public Integer getTeacherId() {
         return teacherId;
     }
@@ -34,7 +36,7 @@ public class Teacher {
         this.teacherId = teacherId;
     }
 
-
+    @JsonProperty("category_name")
     public String getCategoryName() {
         return categoryName;
     }
@@ -43,6 +45,7 @@ public class Teacher {
         this.categoryName = categoryName;
     }
 
+    @JsonProperty("status_name")
     public String getStatusName() {
         return statusName;
     }
@@ -51,10 +54,12 @@ public class Teacher {
         this.statusName = statusName;
     }
 
+    @JsonProperty("name")
     public String getUserName() {
         return user.getName();
     }
 
+    @JsonProperty("email")
     public String getUserEmail() {
         return user.getEmail();
     }
@@ -68,6 +73,7 @@ public class Teacher {
         this.user = user;
     }
 
+    @JsonProperty("events")
     public List<Event> getEventsByStatus() {
         if (status!= null){
         return status.getEvents();

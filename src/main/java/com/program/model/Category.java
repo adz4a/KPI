@@ -1,5 +1,7 @@
 package com.program.model;
 
+import com.fasterxml.jackson.annotation.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
@@ -12,13 +14,14 @@ public class Category {
 	@Column(name="category_id")
 	private Integer categoryId;
 
+//	@JsonProperty("category_name")
 	private String categoryName;
 
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "category")
 	private List<Status> statuses =new ArrayList<>();
 
-
+	@JsonProperty("category_id")
 	public Integer getCategoryId() {
 		return categoryId;
 	}
@@ -27,6 +30,7 @@ public class Category {
 		this.categoryId = categoryId;
 	}
 
+	@JsonProperty("category_name")
 	public String getCategoryName() {
 		return categoryName;
 	}
@@ -35,6 +39,7 @@ public class Category {
 		this.categoryName = categoryName;
 	}
 
+	@JsonProperty("statuses")
 	public List<Status> getStatuses() {
 		return statuses;
 	}

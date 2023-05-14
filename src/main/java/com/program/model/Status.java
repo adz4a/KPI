@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 public class Status {
@@ -32,7 +33,7 @@ public class Status {
 		// TODO Auto-generated constructor stub
 	}
 
-
+	@JsonProperty("status_id")
 	public Integer getStatusId() {
 		return statusId;
 	}
@@ -41,6 +42,7 @@ public class Status {
 		this.statusId = statusId;
 	}
 
+	@JsonProperty("status_name")
 	public String getStatusName() {
 		return statusName;
 	}
@@ -49,6 +51,7 @@ public class Status {
 		this.statusName = statusName;
 	}
 
+	@JsonProperty("status_category")
 	public String getStatusCategory() {
 		return statusCategory;
 	}
@@ -69,6 +72,7 @@ public class Status {
 		this.category.setCategoryId(categoryId);
 	}
 
+	@JsonProperty("events")
 	public List<Event> getEvents() {
 		return events;
 	}

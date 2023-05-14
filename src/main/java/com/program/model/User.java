@@ -37,7 +37,6 @@ public class User {
 //    private List<Status> statuses =new ArrayList<>();
 
 
-
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),

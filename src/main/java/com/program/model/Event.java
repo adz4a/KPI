@@ -1,6 +1,8 @@
 package com.program.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
 
 @Entity
@@ -31,7 +33,7 @@ public class Event {
         this.eventCategory = eventCategory;
         this.status = status;
     }
-
+    @JsonProperty("event_id")
     public Integer getEventId() {
         return eventId;
     }
@@ -40,6 +42,7 @@ public class Event {
         this.eventId = eventId;
     }
 
+    @JsonProperty("event_name")
     public String getEventName() {
         return eventName;
     }
@@ -48,6 +51,7 @@ public class Event {
         this.eventName = eventName;
     }
 
+    @JsonProperty("event_status")
     public String getEventStatus() {
         return eventStatus;
     }
@@ -56,6 +60,7 @@ public class Event {
         this.eventStatus = eventStatus;
     }
 
+    @JsonProperty("event_category")
     public String getEventCategory() {
         return eventCategory;
     }

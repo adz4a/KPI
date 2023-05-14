@@ -2,6 +2,7 @@ package com.program.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 import java.util.List;
@@ -33,6 +34,7 @@ public class Role {
         this.users = users;
     }
 
+    @JsonProperty("role_id")
     public Integer getRoleId() {
         return roleId;
     }
@@ -41,6 +43,7 @@ public class Role {
         this.roleId = roleId;
     }
 
+    @JsonProperty("role")
     public String getRole() {
         return role;
     }
