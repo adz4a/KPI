@@ -2,7 +2,7 @@ package com.program.controller;
 
 import com.program.exception.TeacherException;
 import com.program.helper.TokenHelper;
-import com.program.model.Teacher;
+import com.program.model.teacher.Teacher;
 import com.program.model.User;
 import com.program.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ public class ProfileController {
                 return new ResponseEntity<User>(user, HttpStatus.OK);
             }
             else {
-                Integer id = user.getUserId();
+                Long id = user.getUserId();
                 Teacher teacher = teacherService.getTeacherById(id);
                 return new ResponseEntity<Teacher>(teacher, HttpStatus.OK);
             }

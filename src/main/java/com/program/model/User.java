@@ -1,21 +1,31 @@
 package com.program.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+//import com.program.model.audit.DateAudit;
+import com.program.model.role.Role;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+//@EqualsAndHashCode(callSuper = true)
 @Entity
+@Data
+@NoArgsConstructor
 public class User {
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    private Integer userId;
+    private Long userId;
 
     @Email(message = "{user.email.not.valid}")
     @NotEmpty(message = "{user.email.not.empty}")
@@ -45,23 +55,22 @@ public class User {
     private List<Role> roles;
 
 
-
-//    @JsonIgnore
+    @JsonIgnore
     public boolean isAdmin() {
         String roleName = "Admin";
-        return roles.stream().map(Role::getRole).anyMatch(roleName::equals);
+        return roles.stream().map(Role::getName).anyMatch(roleName::equals);
     }
 
-//    @JsonIgnore
+    @JsonIgnore
     public boolean isTeacher() {
         String roleName = "Teacher";
-        return roles.stream().map(Role::getRole).anyMatch(roleName::equals);
+        return roles.stream().map(Role::getName).anyMatch(roleName::equals);
     }
 
     @JsonIgnore
     public boolean isObserver() {
         String roleName = "Observer";
-        return roles.stream().map(Role::getRole).anyMatch(roleName::equals);
+        return roles.stream().map(Role::getName).anyMatch(roleName::equals);
     }
 
 //    public List<Event> getUserEvents(String categoryName, String statusName) {
@@ -70,19 +79,16 @@ public class User {
 //        }
 //    }
 
-
-    public User() {
-        super();
-    }
-
     @JsonIgnore
-    public Integer getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
+
+
 
     public String getEmail() {
         return email;
@@ -109,23 +115,25 @@ public class User {
         this.password = password;
     }
 
-
+//    @JsonIgnore
     public List<Role> getRoles() {
-        return roles;
+        return roles == null ? null : new ArrayList<>(roles);
     }
 
     public void setRoles(List<Role> roles) {
-        this.roles = roles;
+        if (roles == null) {
+            this.roles = null;
+        } else {
+            this.roles = Collections.unmodifiableList(roles);
+        }
     }
 
-
-    public User(Integer userId, String email, String name, String password, List<Role> roles, List<Event> events) {
-        this.userId = userId;
+    public User(String email, String password) {
         this.email = email;
-        this.name = name;
         this.password = password;
-        this.roles = roles;
     }
+
+
 
     @Override
     public boolean equals(Object o) {
@@ -147,11 +155,11 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-//                "userId=" + userId +
+                "userId=" + userId +
                 ", email='" + email + '\'' +
                 ", name='" + name + '\'' +
                 ", password='" + password + '\'' +
-//                ", roles=" + roles +
+                ", roles=" + roles +
                 '}';
     }
 }

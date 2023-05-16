@@ -36,13 +36,13 @@ public class UserController {
 
 
     @GetMapping("/user/getById/{Id}")
-    public ResponseEntity<User> getCategoryById(@PathVariable("Id") Integer id ) throws UserException {
+    public ResponseEntity<User> getCategoryById(@PathVariable("Id") Long id ) throws UserException {
         User user1 = userService.getUserById(id);
         return new ResponseEntity<User>(user1,HttpStatus.OK);
     }
 
     @PostMapping("/user/update/{id}")
-    public ResponseEntity<User> updateUserById( @PathVariable Integer id, @RequestBody User user) throws UserException{
+    public ResponseEntity<User> updateUserById( @PathVariable Long id, @RequestBody User user) throws UserException{
         User user1=	userService.updateUser(id,user);
         return new ResponseEntity<User>(user1,HttpStatus.OK);
     }

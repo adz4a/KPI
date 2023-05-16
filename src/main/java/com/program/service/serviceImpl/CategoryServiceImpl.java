@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import com.program.model.Event;
 import com.program.model.Status;
-import com.program.model.Teacher;
+import com.program.model.teacher.Teacher;
 import com.program.repository.EventRepository;
 import com.program.repository.StatusRepository;
 import com.program.repository.TeacherRepository;
@@ -57,8 +57,7 @@ public class  CategoryServiceImpl implements CategoryService {
 	public Category getCategoryById(Integer CId) throws CategoryException {
 		Optional<Category> opt= categoryRepository.findById(CId);
 		if(opt.isPresent()) {
-			Category  existingCategory=opt.get();
-			return existingCategory;
+			return opt.get();
 		}
 		else {
 			throw new CategoryException("Category does not exist with Id :"+CId);
@@ -76,31 +75,30 @@ public class  CategoryServiceImpl implements CategoryService {
 			throw new CategoryException("Category with ID " + id + " does not exist.");
 		}
 		Category existingCategory = optionalCategory.get();
-//		Setter
-		existingCategory.setCategoryName(category.getCategoryName());
 
 		List<Status> statuses = statusRepository.findByCategoryId(existingCategory.getCategoryId());
-		if (!statuses.isEmpty()){
-			for (Status status : statuses) {
-//				Setter
-				status.setStatusCategory(existingCategory.getCategoryName());
-				List<Event> events = eventRepository.findByStatusId(status.getStatusId());
-				List<Teacher> teachers = teacherRepository.findByStatusId(status.getStatusId());
-				if (!events.isEmpty()){
-					for (Event event : events)
-//						Setter
-						event.setEventCategory(existingCategory.getCategoryName());
-				}
-				if (!teachers.isEmpty()){
-					for (Teacher teacher : teachers) {
-//						Setter
-						teacher.setCategoryName(existingCategory.getCategoryName());
-					}
-				}
-			}
-		} else {
-			return null;
-		}
+//		List<Teacher> teachers = teacherRepository.findByCategoryName(existingCategory.getCategoryName());
+//		Setter
+		existingCategory.setCategoryName(category.getCategoryName());
+//		if (!statuses.isEmpty()){
+////			for (Status status : statuses) {
+//////				Setter
+////				List<Event> events = eventRepository.findByStatusId(status.getStatusId());
+//////				if (!events.isEmpty()){
+//////					for (Event event : events)
+////////						Setter
+//////						event.setEventCategory(existingCategory.getCategoryName());
+//////				}
+//////				if (!teachers.isEmpty()){
+//////					for (Teacher teacher : teachers) {
+////////						Setter
+//////						teacher.setCategoryName(existingCategory.getCategoryName());
+//////					}
+//////				}
+////			}
+//		} else {
+//			return null;
+//		}
 
 		return categoryRepository.save(existingCategory);
 	}
@@ -114,18 +112,16 @@ public class  CategoryServiceImpl implements CategoryService {
 			if (!statuses.isEmpty()){
 				for (Status status : statuses) {
 					List<Event> events = eventRepository.findByStatusId(status.getStatusId());
-					List<Teacher> teachers = teacherRepository.findByStatusId(status.getStatusId());
+//					List<Teacher> teachers = teacherRepository.findByCategoryName(existingCategory.getCategoryName());
 					if (!events.isEmpty()){
-						for (Event event : events)
-//							Delete
 							eventRepository.deleteByStatusId(status.getStatusId());
 					}
-					if (!teachers.isEmpty()){
-						for (Teacher teacher : teachers) {
-//							Set null
-							teacherRepository.resetStatusByStatusId(status.getStatusId());
-						}
-					}
+//					if (!teachers.isEmpty()){
+//						for (Teacher teacher : teachers) {
+////							Set null
+//							teacherRepository.resetCategoryNameAndStatusName(existingCategory.getCategoryName());
+//						}
+//					}
 				}
 				statusRepository.deleteByCategoryId(id);
 			} else {

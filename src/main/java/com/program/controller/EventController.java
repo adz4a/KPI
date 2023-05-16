@@ -1,9 +1,7 @@
 package com.program.controller;
 
 import com.program.exception.EventException;
-import com.program.exception.StatusException;
 import com.program.model.Event;
-import com.program.model.Status;
 import com.program.repository.EventRepository;
 import com.program.service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 
 @RestController
 public class EventController {
@@ -31,27 +30,34 @@ public class EventController {
         return new ResponseEntity<List<Event>>(events, HttpStatus.OK);
     }
 
-    @PostMapping("/event/add")
-    public HttpEntity<? extends Object> addNewEvent(@RequestBody Event event) throws EventException
+    @PostMapping("status/{Id}/event/add")
+    public HttpEntity<? extends Object> addNewEvent(@PathVariable("Id") Integer id, @RequestBody Event event) throws EventException
     {
-        Event newEvent = eventService.addNewEvent(event);
+        Event newEvent = eventService.addNewEvent(id,event);
 
         if (newEvent==null) {
-            return new ResponseEntity<String>("Status details is empty or status/category which you indicated does not exist!", HttpStatus.OK);
+            return new ResponseEntity<String>("Status details is empty!", HttpStatus.OK);
         }
         else {
             return new ResponseEntity<Event>(newEvent, HttpStatus.OK);
         }
     }
 
-    @GetMapping("/event/getById/{Id}")
-    public ResponseEntity<Event> getStatusById(@PathVariable("Id") Integer id ) throws EventException
+    @GetMapping("status/event/getById/{Id}")
+    public ResponseEntity<Event> getEventById(@PathVariable("Id") Integer id ) throws EventException
     {
         Event event = eventService.getEventById(id);
         return new ResponseEntity<Event>(event,HttpStatus.OK);
     }
 
-    @PutMapping("/event/update/{id}")
+    @GetMapping("status/event/update/{Id}")
+    public ResponseEntity<Event> updateEventById(@PathVariable("Id") Integer id ) throws EventException
+    {
+        Event event = eventService.getEventById(id);
+        return new ResponseEntity<Event>(event,HttpStatus.OK);
+    }
+
+    @PutMapping("status/event/update/{id}")
     public ResponseEntity<Object> updateEventById(@PathVariable Integer id,@RequestBody Event event) throws EventException {
         try {
             Event updatedEvent = eventService.updateEventById(id, event);
@@ -61,7 +67,7 @@ public class EventController {
         }
     }
 
-    @DeleteMapping("/event/delete/{Id}")
+    @DeleteMapping("status/event/delete/{Id}")
     public ResponseEntity<Object> deleteEventById(@PathVariable ("Id") Integer id ) throws EventException
     {
         eventService.deleteEventById(id);

@@ -1,7 +1,7 @@
 package com.program.service.serviceImpl;
 
 import com.program.exception.RoleException;
-import com.program.model.Role;
+import com.program.model.role.Role;
 import com.program.repository.RoleRepository;
 import com.program.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;

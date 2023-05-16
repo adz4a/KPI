@@ -1,7 +1,7 @@
 package com.program.service;
 
 import com.program.exception.RoleException;
-import com.program.model.Role;
+import com.program.model.role.Role;
 
 import java.util.List;
 

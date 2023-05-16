@@ -1,11 +1,8 @@
 package com.program.service.serviceImpl;
 
-import com.program.exception.StatusException;
-import com.program.model.Category;
 import com.program.model.Event;
 import com.program.exception.EventException;
 import com.program.model.Status;
-import com.program.model.Teacher;
 import com.program.repository.EventRepository;
 import com.program.repository.StatusRepository;
 import com.program.service.EventService;
@@ -13,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -31,9 +27,9 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Event addNewEvent(Event event) throws EventException {
+    public Event addNewEvent(Integer statusId, Event event) throws EventException {
         if (event!=null) {
-            Status status = statusRepository.findByCategoryAndStatusName(event.getEventCategory(), event.getEventStatus());
+            Status status = statusRepository.findByStatusId(statusId);
 
             if (status != null) {
                 event.setStatus(status);
@@ -55,7 +51,7 @@ public class EventServiceImpl implements EventService {
             return opt.get();
         }
         else {
-            throw new EventException("Status does not exist with Id :"+eventId);
+            throw new EventException("Event does not exist with Id :"+eventId);
 
         }
     }
@@ -63,32 +59,39 @@ public class EventServiceImpl implements EventService {
     @Override
     public Event updateEventById(Integer id, Event event) throws EventException {
         if (event == null) {
-            throw new EventException("Status details is Empty...");
+            throw new EventException("Event details is Empty...");
         }
 
         Optional<Event> optionalEvent = eventRepository.findById(id);
         if (optionalEvent.isEmpty()) {
-            throw new EventException("Status with ID " + id + " does not exist.");
+            throw new EventException("Event with ID " + id + " does not exist.");
         }
         Event existingEvent = optionalEvent.get();
 //		Setter
         existingEvent.setEventName(event.getEventName());
+        existingEvent.setEventPercentage(event.getEventPercentage());
 
-        Status status = statusRepository.findByCategoryAndStatusName(event.getEventCategory(), event.getEventStatus());
-        if (status != null) {
-            existingEvent.setStatus(status);
-            existingEvent.setEventStatus(event.getEventStatus());
-            existingEvent.setEventCategory(event.getEventCategory());
-        } else {
-            throw new EventException("Category with name " + event.getEventCategory() + " or Status with name " + event.getEventStatus() + " doesn't exist!");
-        }
+//        Status status = statusRepository.;
+//        if (status != null) {
+//            existingEvent.setStatus(status);
+//            existingEvent.setEventPercentage(event.getEventPercentage());
+//        } else {
+//            throw new EventException("Category with this name or Status with this name doesn't exist!");
+//        }
 
         return eventRepository.save(existingEvent);
     }
 
     @Override
     public void deleteEventById(Integer id) throws EventException {
-        eventRepository.deleteByEventId(id);
+        Optional<Event> opt= eventRepository.findById(id);
+        if(opt.isPresent()) {
+            eventRepository.deleteByEventId(id);
+        }
+        else {
+            throw new EventException("Event does not exist with Id :"+ id);
+
+        }
     }
 
 }

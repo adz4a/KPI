@@ -5,6 +5,8 @@ import java.util.List;
 import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.program.model.teacher.TeacherEvent;
+import io.swagger.models.auth.In;
 
 @Entity
 public class Status {
@@ -14,13 +16,10 @@ public class Status {
 	@Column(name="status_id")
 	private Integer statusId;
 
-
 	private String statusName;
-	private String statusCategory;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "status")
 	private List<Event> events=new ArrayList<>();
-
 
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "categoryId")
@@ -51,14 +50,6 @@ public class Status {
 		this.statusName = statusName;
 	}
 
-	@JsonProperty("status_category")
-	public String getStatusCategory() {
-		return statusCategory;
-	}
-
-	public void setStatusCategory(String statusCategory) {
-		this.statusCategory = statusCategory;
-	}
 
 	public Category getCategory() {
 		return category;
@@ -68,8 +59,18 @@ public class Status {
 		this.category = category;
 	}
 
+	@JsonIgnore
+	public Integer getCategoryId() {
+		return category.getCategoryId();
+	}
+
 	public void setCategoryId(Integer categoryId) {
 		this.category.setCategoryId(categoryId);
+	}
+
+	@JsonProperty
+	public String getCategoryName(){
+		return category.getCategoryName();
 	}
 
 	@JsonProperty("events")
@@ -80,8 +81,6 @@ public class Status {
 	public void setEvents(List<Event> events) {
 		this.events = events;
 	}
-
-
 
 }
 		

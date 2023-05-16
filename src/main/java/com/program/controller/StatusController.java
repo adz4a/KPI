@@ -3,9 +3,6 @@ package com.program.controller;
 import java.util.List;
 
 import com.program.model.Status;
-import com.program.repository.CategoryRepository;
-import com.program.repository.EventRepository;
-import com.program.repository.TeacherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -40,10 +37,10 @@ public class StatusController {
 			return new ResponseEntity<List<Status>>(statuses,HttpStatus.OK);
 		}
 		
-		@PostMapping("/status/add")
-		public HttpEntity<? extends Object> addNewStatus(@RequestBody Status status) throws StatusException
+		@PostMapping("category/{Id}/status/add")
+		public HttpEntity<? extends Object> addNewStatus(@PathVariable ("Id") Integer id,@RequestBody Status status) throws StatusException
 		{
-			Status status1 = statusService.addNewStatus(status);
+			Status status1 = statusService.addNewStatus(id,status);
 
 			if (status1==null) {
 				return new ResponseEntity<String>("Status details is empty or category which you indicated does not exist!", HttpStatus.OK);
@@ -53,13 +50,19 @@ public class StatusController {
 			}
 		}
 		
-		@GetMapping("/status/getById/{Id}")
+		@GetMapping("category/status/getById/{Id}")
 		public ResponseEntity<Status> getStatusById(@PathVariable ("Id") Integer id ) throws StatusException {
 			Status status1 =statusService.getStatusById(id);
 			return new ResponseEntity<Status>(status1,HttpStatus.OK);
 		}
-		
-		@PutMapping("/status/update/{id}")
+
+		@GetMapping("category/status/update/{Id}")
+		public ResponseEntity<Status> updateStatusById(@PathVariable ("Id") Integer id ) throws StatusException {
+		Status status1 =statusService.getStatusById(id);
+		return new ResponseEntity<Status>(status1,HttpStatus.OK);
+		}
+
+		@PutMapping("category/status/update/{id}")
 		public ResponseEntity<Object> updateStatusById(@PathVariable Integer id,@RequestBody Status status) throws StatusException {
 			try {
 				Status updatedStatus = statusService.updateStatusById(id, status);
@@ -69,7 +72,7 @@ public class StatusController {
 			}
 		}
 		
-		@DeleteMapping("/status/delete/{Id}")
+		@DeleteMapping("category/status/delete/{Id}")
 		public ResponseEntity<String> deleteStatusById(@PathVariable ("Id") Integer id ) throws StatusException {
 			statusService.deleteStatusById(id);
 			return new ResponseEntity<String>("Status with this Id deleted",HttpStatus.OK);

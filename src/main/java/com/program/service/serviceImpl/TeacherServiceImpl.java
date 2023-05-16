@@ -1,7 +1,7 @@
 package com.program.service.serviceImpl;
 
 import com.program.exception.TeacherException;
-import com.program.model.Teacher;
+import com.program.model.teacher.Teacher;
 import com.program.repository.TeacherRepository;
 import com.program.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ public class TeacherServiceImpl implements TeacherService {
 
 
     @Override
-    public Teacher getTeacherById(Integer id) throws TeacherException {
+    public Teacher getTeacherById(Long id) throws TeacherException {
         return teacherRepository.findByUserId(id);
     }
 }

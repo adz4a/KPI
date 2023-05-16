@@ -9,7 +9,7 @@ public interface StatusService {
 
 	  List<Status>  getAllStatus() throws StatusException;
 
-	  Status addNewStatus(Status status)throws StatusException;
+	  Status addNewStatus(Integer categoryId,Status status)throws StatusException;
 
 	  Status getStatusById(Integer Id)throws StatusException;
 

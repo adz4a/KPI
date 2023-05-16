@@ -18,10 +18,10 @@ public interface UserService {
 
     boolean isUserEmailPresent(String email) throws UserException;
 
-    User getUserById(Integer userId) throws UserException;
+    User getUserById(Long userId) throws UserException;
 
-    User updateUser(Integer id, User user) throws UserException;
+    User updateUser(Long id, User user) throws UserException;
 
-    void deleteUser(Integer id) throws UserException;
+    void deleteUser(Long id) throws UserException;
 
 }

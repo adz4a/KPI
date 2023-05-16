@@ -2,8 +2,10 @@ package com.program.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.program.model.teacher.TeacherEvent;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Event {
@@ -14,25 +16,22 @@ public class Event {
     private Integer eventId;
 
     private String eventName;
-    private String eventStatus;
-    private String eventCategory;
+    private Integer eventPercentage;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "statusId")
     @JsonIgnore
     private Status status;
 
+    @OneToMany(mappedBy = "event")
+    @JsonIgnore
+    private List<TeacherEvent> teacherEvents;
+
     public Event() {
         super();
     }
 
-    public Event(Integer eventId, String eventName, String eventStatus, String eventCategory, Status status) {
-        this.eventId = eventId;
-        this.eventName = eventName;
-        this.eventStatus = eventStatus;
-        this.eventCategory = eventCategory;
-        this.status = status;
-    }
+
     @JsonProperty("event_id")
     public Integer getEventId() {
         return eventId;
@@ -51,22 +50,17 @@ public class Event {
         this.eventName = eventName;
     }
 
-    @JsonProperty("event_status")
-    public String getEventStatus() {
-        return eventStatus;
+    @JsonProperty("event_percentage")
+    public Integer getEventPercentage() {
+        return eventPercentage;
     }
 
-    public void setEventStatus(String eventStatus) {
-        this.eventStatus = eventStatus;
+    public void setEventPercentage(Integer eventPercentage) {
+        this.eventPercentage = eventPercentage;
     }
 
-    @JsonProperty("event_category")
-    public String getEventCategory() {
-        return eventCategory;
-    }
-
-    public void setEventCategory(String eventCategory) {
-        this.eventCategory = eventCategory;
+    public void setTeacherEvents(List<TeacherEvent> teacherEvents) {
+        this.teacherEvents = teacherEvents;
     }
 
     public Status getStatus() {
@@ -88,8 +82,6 @@ public class Event {
         return "Event{" +
                 "eventId=" + eventId +
                 ", eventName='" + eventName + '\'' +
-                ", eventStatus='" + eventStatus + '\'' +
-                ", eventCategory='" + eventCategory + '\'' +
                 ", status=" + status +
                 '}';
     }

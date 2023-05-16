@@ -2,7 +2,7 @@ package com.program.service.serviceImpl;
 
 
 import com.program.exception.UserException;
-import com.program.model.Role;
+import com.program.model.role.Role;
 import com.program.model.User;
 import com.program.repository.RoleRepository;
 import com.program.repository.UserRepository;
@@ -72,12 +72,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserById(Integer id) throws UserException {
+    public User getUserById(Long id) throws UserException {
         return userRepository.findById(id).orElse(null);
     }
 
     @Override
-    public User updateUser(Integer id, User user) throws UserException {
+    public User updateUser(Long id, User user) throws UserException {
 
         Optional<User> opt = userRepository.findById(id);
 
@@ -90,7 +90,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(Integer id) throws UserException {
+    public void deleteUser(Long id) throws UserException {
         User user = userRepository.getOne(id);
         userRepository.delete(user);
     }

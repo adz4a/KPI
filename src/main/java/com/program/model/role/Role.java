@@ -1,8 +1,9 @@
-package com.program.model;
+package com.program.model.role;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.program.model.User;
 
 import javax.persistence.*;
 import java.util.List;
@@ -16,7 +17,8 @@ public class Role {
     @Column(name = "role_id")
     private Integer roleId;
 
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private ERole role;
 
     @ManyToMany(mappedBy = "roles")
     @JsonIgnore
@@ -25,11 +27,11 @@ public class Role {
     public Role() {
     }
 
-    public Role(String role) {
+    public Role(ERole role) {
         this.role = role;
     }
 
-    public Role(String role, List<User> users) {
+    public Role(ERole role, List<User> users) {
         this.role = role;
         this.users = users;
     }
@@ -44,13 +46,10 @@ public class Role {
     }
 
     @JsonProperty("role")
-    public String getRole() {
+    public ERole getName() {
         return role;
     }
 
-    public void setRole(String role) {
-        this.role = role;
-    }
 
     public List<User> getUsers() {
         return users;
@@ -60,10 +59,10 @@ public class Role {
         this.users = users;
     }
 
-    @Override
-    public String toString() {
-        return this.role;
-    }
+//    @Override
+//    public String toString() {
+//        return this.role;
+//    }
 
     @Override
     public boolean equals(Object o) {

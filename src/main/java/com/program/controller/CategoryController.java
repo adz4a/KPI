@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,8 +34,8 @@ public class CategoryController {
 		List<Category> categories =	categoryservice.getAllCategories();
 			return new ResponseEntity<List<Category>>(categories,HttpStatus.OK);
 		}
-		
 
+		@PreAuthorize("hasRole('Admin')")
 		@PostMapping("/category/add")
 		public ResponseEntity<Category> addNewCategory (@RequestBody Category category) throws CategoryException  
 		{
@@ -47,6 +48,12 @@ public class CategoryController {
 		public ResponseEntity<Category> getCategoryById(@PathVariable ("Id") Integer id ) throws CategoryException{
 			Category category1=categoryservice.getCategoryById(id);
 			return new ResponseEntity<Category>(category1,HttpStatus.OK);
+		}
+
+		@GetMapping("/category/update/{Id}")
+		public ResponseEntity<Category> updateCategoryById(@PathVariable ("Id") Integer id ) throws CategoryException{
+		Category category1=categoryservice.getCategoryById(id);
+		return new ResponseEntity<Category>(category1,HttpStatus.OK);
 		}
 		
 		@PutMapping("/category/update/{id}")

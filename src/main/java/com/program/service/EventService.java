@@ -11,7 +11,7 @@ public interface EventService {
 
     List<Event> getAllEvents() throws EventException;
 
-    Event addNewEvent(Event event) throws EventException;
+    Event addNewEvent(Integer statusId, Event event) throws EventException;
 
     Event getEventById(Integer eventId) throws EventException;
 

@@ -1,7 +1,7 @@
 package com.program.controller;
 
 import com.program.exception.TeacherException;
-import com.program.model.Teacher;
+import com.program.model.teacher.Teacher;
 import com.program.service.TeacherService;
 import com.program.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ public class TeacherController {
     }
 
     @GetMapping("/teacher/getById/{Id}")
-    public ResponseEntity<Teacher> getTeacherById(@PathVariable("Id") Integer id ) throws TeacherException{
+    public ResponseEntity<Teacher> getTeacherById(@PathVariable("Id") Long id ) throws TeacherException{
         Teacher teacher = teacherService.getTeacherById(id);
         return new ResponseEntity<Teacher>(teacher,HttpStatus.OK);
     }
