@@ -35,14 +35,31 @@ public class TeacherEvent {
     private Submission submission;
 
 
-
-
-
     private boolean isApprove;
     private boolean submissionStatus;
 
+    //    @JsonIgnore
+    @JsonProperty("teacher_id")
+    public Long getTeacherId(){
+        return teacher.getTeacherId();
+    }
+
+    @JsonProperty("teacher_name")
+    public String getTeacherName() {
+        return teacher.getUserName();
+    }
+
+    @JsonProperty("teacher_status")
+    public String getTeacherStatus(){
+        return teacher.getStatusName();
+    }
     public void setTeacher(Teacher teacher) {
         this.teacher = teacher;
+    }
+
+    @JsonProperty("event_id")
+    public Integer getEventId(){
+        return event.getEventId();
     }
 
     @JsonProperty("event_name")
@@ -84,4 +101,7 @@ public class TeacherEvent {
         }else
             return null;
     }
+
+
+
 }

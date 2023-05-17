@@ -1,9 +1,11 @@
-package com.program.controller;
+package com.program.controller.teacher;
 
 import com.program.exception.TeacherException;
 import com.program.model.teacher.Teacher;
+import com.program.model.teacher.TeacherEvent;
 import com.program.service.TeacherService;
 import com.program.service.UserService;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +21,6 @@ public class TeacherController {
     @Autowired
     public TeacherService teacherService;
 
-    @Autowired
-    public UserService userService;
 
     @GetMapping("/teachers")
     public ResponseEntity<List<Teacher>> getAllTeachers() throws TeacherException {
