@@ -31,7 +31,7 @@ class KPIAppApplicationTests {
 
 	@Test
 	void contextLoads() {
-		User user = userRepository.findByEmail("adzha@gmail.com");
+		User user = userRepository.findByEmail("ali@gmail.com");
 //		User newUser = user.get();
 		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 		userRepository.save(user);

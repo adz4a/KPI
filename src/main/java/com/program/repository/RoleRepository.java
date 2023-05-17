@@ -1,11 +1,14 @@
 package com.program.repository;
 
+import com.program.model.role.ERole;
 import com.program.model.role.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public interface RoleRepository extends JpaRepository<Role, Integer> {
+import java.util.Optional;
 
-    Role findByRole(String user);
+@Repository
+public interface RoleRepository extends JpaRepository<Role, Long> {
+
+    Optional<Role> findByName(ERole name);
 }

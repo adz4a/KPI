@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +25,7 @@ public class EventController {
 
 
     @GetMapping("/events")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('OBSERVER')")
     public ResponseEntity<List<Event>> getAllEvents() throws EventException
     {
         List<Event> events = eventService.getAllEvents();
@@ -31,6 +33,7 @@ public class EventController {
     }
 
     @PostMapping("status/{Id}/event/add")
+    @PreAuthorize("hasRole('ADMIN')")
     public HttpEntity<? extends Object> addNewEvent(@PathVariable("Id") Integer id, @RequestBody Event event) throws EventException
     {
         Event newEvent = eventService.addNewEvent(id,event);
@@ -51,6 +54,7 @@ public class EventController {
     }
 
     @GetMapping("status/event/update/{Id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Event> updateEventById(@PathVariable("Id") Integer id ) throws EventException
     {
         Event event = eventService.getEventById(id);
@@ -58,6 +62,7 @@ public class EventController {
     }
 
     @PutMapping("status/event/update/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Object> updateEventById(@PathVariable Integer id,@RequestBody Event event) throws EventException {
         try {
             Event updatedEvent = eventService.updateEventById(id, event);
@@ -68,6 +73,7 @@ public class EventController {
     }
 
     @DeleteMapping("status/event/delete/{Id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Object> deleteEventById(@PathVariable ("Id") Integer id ) throws EventException
     {
         eventService.deleteEventById(id);

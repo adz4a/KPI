@@ -73,9 +73,12 @@ public class SecurityConfiguration {
         http.cors().and().csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .authorizeRequests().antMatchers("/api/auth/**").permitAll()
-                .antMatchers("/api/test/**").permitAll()
+                .authorizeRequests()
+                .antMatchers("/api/auth/**").permitAll()
+                .antMatchers("/api/admin/**").hasAnyRole("ADMIN")
                 .anyRequest().authenticated();
+//                .and()
+//                .logout().deleteCookies(authenticationJwtTokenFilter().toString());
 
         http.authenticationProvider(authenticationProvider());
 
@@ -83,22 +86,6 @@ public class SecurityConfiguration {
 
         return http.build();
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

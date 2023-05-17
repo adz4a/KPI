@@ -10,16 +10,13 @@ import com.program.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService {
 
-    private static final String ADMIN="ADMIN";
-    private static final String USER="USER";
+    private static final String ADMIN="ROLE_ADMIN";
+    private static final String USER="ROLE_TEACHER";
 
     private UserRepository userRepository;
     private RoleRepository roleRepository;
@@ -35,8 +32,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User changeRoleToAdmin(User user) throws UserException {
-        Role adminRole = roleRepository.findByRole(ADMIN);
-        user.setRoles(new ArrayList<>(Collections.singletonList(adminRole)));
+//        Role adminRole = roleRepository.findByRole(ADMIN);
+//        user.setRoles(new HashSet<>(Collections.singletonList(adminRole)));
         return userRepository.save(user);
     }
 
@@ -57,8 +54,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public User createUser(User user) throws UserException {
         user.setPassword(user.getPassword());
-        Role userRole = roleRepository.findByRole(USER);
-        user.setRoles(new ArrayList<>(Collections.singletonList(userRole)));
+//        Role userRole = roleRepository.findByRole(USER);
+//        user.setRoles(new HashSet<>(Collections.singletonList(userRole)));
         return userRepository.save(user);
     }
     @Override
@@ -67,8 +64,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean isUserEmailPresent(String email) throws UserException {
-        return userRepository.findByEmail(email) != null;
+    public User isUserEmailPresent(String email) throws UserException {
+        if(userRepository.findByEmail(email) != null){
+            User user = userRepository.findByEmail(email);
+            return user;
+        }
+        else
+            return null;
     }
 
     @Override

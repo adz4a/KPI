@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,6 +32,7 @@ public class StatusController {
 
 		
 		@GetMapping("/statuses")
+		@PreAuthorize("hasRole('ADMIN') or hasRole('OBSERVER')")
 		public ResponseEntity<List<Status>> getAllStatuses() throws StatusException
 		{
 			List<Status> statuses =	statusService.getAllStatus();
@@ -38,6 +40,7 @@ public class StatusController {
 		}
 		
 		@PostMapping("category/{Id}/status/add")
+		@PreAuthorize("hasRole('ADMIN')")
 		public HttpEntity<? extends Object> addNewStatus(@PathVariable ("Id") Integer id,@RequestBody Status status) throws StatusException
 		{
 			Status status1 = statusService.addNewStatus(id,status);
@@ -57,12 +60,14 @@ public class StatusController {
 		}
 
 		@GetMapping("category/status/update/{Id}")
+		@PreAuthorize("hasRole('ADMIN')")
 		public ResponseEntity<Status> updateStatusById(@PathVariable ("Id") Integer id ) throws StatusException {
 		Status status1 =statusService.getStatusById(id);
 		return new ResponseEntity<Status>(status1,HttpStatus.OK);
 		}
 
 		@PutMapping("category/status/update/{id}")
+		@PreAuthorize("hasRole('ADMIN')")
 		public ResponseEntity<Object> updateStatusById(@PathVariable Integer id,@RequestBody Status status) throws StatusException {
 			try {
 				Status updatedStatus = statusService.updateStatusById(id, status);
@@ -73,6 +78,7 @@ public class StatusController {
 		}
 		
 		@DeleteMapping("category/status/delete/{Id}")
+		@PreAuthorize("hasRole('ADMIN')")
 		public ResponseEntity<String> deleteStatusById(@PathVariable ("Id") Integer id ) throws StatusException {
 			statusService.deleteStatusById(id);
 			return new ResponseEntity<String>("Status with this Id deleted",HttpStatus.OK);

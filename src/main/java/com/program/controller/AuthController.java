@@ -1,17 +1,13 @@
 package com.program.controller;
 
 import com.program.detail.UserDetailsImpl;
-import com.program.exception.UserException;
-import com.program.helper.TokenHelper;
 import com.program.helper.jwt.JwtUtils;
-import com.program.model.User;
 import com.program.payload.response.JwtResponse;
 import com.program.payload.request.LoginRequest;
 import com.program.repository.RoleRepository;
 import com.program.repository.UserRepository;
 import com.program.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -32,8 +28,6 @@ public class AuthController {
     @Autowired
     public UserService userService;
 
-    @Autowired
-    private TokenHelper tokenHelper;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -51,25 +45,8 @@ public class AuthController {
     JwtUtils jwtUtils;
 
 
+
     @PostMapping("/login")
-    public ResponseEntity<String> loginUser(@RequestParam("email") String email, @RequestParam("password") String password) throws UserException{
-        if (email == null || password == null) {
-            return new ResponseEntity<>("No credentials specified", HttpStatus.BAD_REQUEST);
-        }
-        User user = userService.getUserByEmail(email);
-
-        if (user != null && user.getPassword().equals(password)) {
-            int token = tokenHelper.generateTokenForUser(user);
-            System.out.println(token);
-            return new ResponseEntity<>("Authorization successful. Here's your token: " + token, HttpStatus.OK);
-        }
-
-        return new ResponseEntity<>("Bad credentials", HttpStatus.BAD_REQUEST);
-
-
-    }
-
-    @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
         Authentication authentication = authenticationManager.authenticate(
@@ -90,19 +67,6 @@ public class AuthController {
 
     }
 
-    @GetMapping("/logout")
-    public ResponseEntity<String> logout(@RequestHeader int token) {
-
-        User user = tokenHelper.getUserByToken(token);
-        if (user != null) {
-            String msgUser = "Bye, " + user.getEmail() + "!";
-            tokenHelper.deleteTokenForUser(token);
-            return new ResponseEntity<>(msgUser, HttpStatus.OK);
-        }
-
-        return new ResponseEntity<>("Token expired", HttpStatus.UNAUTHORIZED);
-
-    }
 
 
 

@@ -6,6 +6,7 @@ import com.program.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,6 +30,7 @@ public class UserController {
     }
 
     @GetMapping("/users")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<User>> getAllUsers() throws UserException {
         List<User> users =	userService.findAll();
         return new ResponseEntity<List<User>>(users,HttpStatus.OK);
@@ -36,12 +38,14 @@ public class UserController {
 
 
     @GetMapping("/user/getById/{Id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<User> getCategoryById(@PathVariable("Id") Long id ) throws UserException {
         User user1 = userService.getUserById(id);
         return new ResponseEntity<User>(user1,HttpStatus.OK);
     }
 
     @PostMapping("/user/update/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<User> updateUserById( @PathVariable Long id, @RequestBody User user) throws UserException{
         User user1=	userService.updateUser(id,user);
         return new ResponseEntity<User>(user1,HttpStatus.OK);

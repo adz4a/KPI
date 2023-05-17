@@ -1,7 +1,7 @@
 package com.program.model.role;
 
 public enum ERole {
-    Admin,
-    Teacher,
-    Observer
+    ROLE_ADMIN,
+    ROLE_TEACHER,
+    ROLE_OBSERVER
 }

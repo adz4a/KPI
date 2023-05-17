@@ -2,25 +2,25 @@ package com.program.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 //import com.program.model.audit.DateAudit;
+import com.program.model.role.ERole;
 import com.program.model.role.Role;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 //@EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
 @NoArgsConstructor
 public class User {
-    private static final long serialVersionUID = 1L;
+    private static long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,26 +51,25 @@ public class User {
     @JoinTable(name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
-    @JsonIgnore
-    private List<Role> roles;
+    private Set<Role> roles = new HashSet<>();
 
 
-    @JsonIgnore
+//    @JsonIgnore
     public boolean isAdmin() {
-        String roleName = "Admin";
-        return roles.stream().map(Role::getName).anyMatch(roleName::equals);
+        ERole adminRole = ERole.ROLE_ADMIN;
+        return roles.stream().map(Role::getName).anyMatch(adminRole::equals);
     }
 
-    @JsonIgnore
+//    @JsonIgnore
     public boolean isTeacher() {
-        String roleName = "Teacher";
-        return roles.stream().map(Role::getName).anyMatch(roleName::equals);
+        ERole teacherRole = ERole.ROLE_TEACHER;
+        return roles.stream().map(Role::getName).anyMatch(teacherRole::equals);
     }
 
     @JsonIgnore
     public boolean isObserver() {
-        String roleName = "Observer";
-        return roles.stream().map(Role::getName).anyMatch(roleName::equals);
+        ERole observerRole = ERole.ROLE_OBSERVER;
+        return roles.stream().map(Role::getName).anyMatch(observerRole::equals);
     }
 
 //    public List<Event> getUserEvents(String categoryName, String statusName) {
@@ -116,16 +115,12 @@ public class User {
     }
 
 //    @JsonIgnore
-    public List<Role> getRoles() {
-        return roles == null ? null : new ArrayList<>(roles);
+    public Set<Role> getRoles() {
+        return roles;
     }
 
-    public void setRoles(List<Role> roles) {
-        if (roles == null) {
-            this.roles = null;
-        } else {
-            this.roles = Collections.unmodifiableList(roles);
-        }
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 
     public User(String email, String password) {
