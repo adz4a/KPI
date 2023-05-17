@@ -42,7 +42,6 @@ public class ProfileController {
     }
 
 
-
     @GetMapping("/profile")
     @PreAuthorize("hasRole('TEACHER')")
     public HttpEntity<? extends Object> getUser(HttpServletRequest request) throws TeacherException, UserException {

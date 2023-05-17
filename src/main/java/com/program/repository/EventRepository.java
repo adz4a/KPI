@@ -21,7 +21,6 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
     @Query("SELECT e FROM Event e WHERE e.status.statusId = :eventId")
     List<Event> findByEventId(Integer eventId);
 
-
     @Modifying
     @Query("UPDATE Event e SET e.status = null WHERE e.status.statusId = :statusId")
     void resetStatusByStatusId(Integer statusId);

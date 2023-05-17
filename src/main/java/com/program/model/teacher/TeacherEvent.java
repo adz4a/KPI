@@ -102,6 +102,10 @@ public class TeacherEvent {
             return null;
     }
 
+    public void setSubmissionId(String submissionId){
+        this.submission.setSubmissionId(submissionId);
+    }
+
 
 
 }

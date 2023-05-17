@@ -22,7 +22,7 @@ public class TeacherEventController {
     public TeacherEventService teacherEventService;
 
     @GetMapping("/teacher/events")
-//    @PreAuthorize("hasRole('ADMIN') or hasRole('OBSERVER')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('OBSERVER')")
     public ResponseEntity<List<TeacherEvent>> getAllCategories() throws TeacherException {
         List<TeacherEvent> teacherEvents =	teacherEventService.getAllTeacherEvent();
         return new ResponseEntity<List<TeacherEvent>>(teacherEvents,HttpStatus.OK);
