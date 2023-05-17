@@ -2,13 +2,14 @@ package com.program.model.submission;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.program.model.Event;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Lob;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data@NoArgsConstructor
@@ -25,6 +26,7 @@ public class Submission {
 
     @Lob
     private byte[] data;
+
 
     public Submission(String fileName, String fileType, Long size, byte[] data) {
         this.fileName = fileName;

@@ -25,7 +25,7 @@ public class CategoryController {
 
 	@Autowired
 	public CategoryService categoryservice;
-	
+
 	@Autowired
 	public CategoryRepository categoryRepository;
 
@@ -39,13 +39,13 @@ public class CategoryController {
 
 		@PostMapping("/category/add")
 		@PreAuthorize("hasRole('ADMIN')")
-		public ResponseEntity<Category> addNewCategory (@RequestBody Category category) throws CategoryException  
+		public ResponseEntity<Category> addNewCategory (@RequestBody Category category) throws CategoryException
 		{
 			Category category1 = categoryservice.addNewCategory(category);
 			System.out.println(category);
 			return new ResponseEntity<Category>(category1, HttpStatus.OK);
 		}
-		
+
 		@GetMapping("/category/getById/{Id}")
 		public ResponseEntity<Category> getCategoryById(@PathVariable ("Id") Integer id ) throws CategoryException{
 			Category category1=categoryservice.getCategoryById(id);
@@ -58,21 +58,21 @@ public class CategoryController {
 		Category category1=categoryservice.getCategoryById(id);
 		return new ResponseEntity<Category>(category1,HttpStatus.OK);
 		}
-		
+
 		@PutMapping("/category/update/{id}")
 		@PreAuthorize("hasRole('ADMIN')")
 		public ResponseEntity<Category> updateCategoryById(@PathVariable Integer id,@RequestBody Category category) throws CategoryException{
 			Category category1=	categoryservice.updateCategoryById(id, category);
 			return new ResponseEntity<Category>(category1,HttpStatus.OK);
 		}
-		
+
 		@DeleteMapping("/category/delete/{Id}")
 		@PreAuthorize("hasRole('ADMIN')")
 		public ResponseEntity<Object> deleteCategoryById(@PathVariable ("Id") Integer id) throws CategoryException{
 			categoryservice.deleteCategoryById(id);
 			return new ResponseEntity<>("Category with this id deleted",HttpStatus.OK);
 		}
-		
+
 
 }
 

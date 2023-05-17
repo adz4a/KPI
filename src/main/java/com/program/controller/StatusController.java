@@ -25,12 +25,12 @@ public class StatusController {
 
 	@Autowired
 	public StatusService statusService;
-	
+
 	@Autowired
 	public StatusRepository statusRepository;
 
 
-		
+
 		@GetMapping("/statuses")
 		@PreAuthorize("hasRole('ADMIN') or hasRole('OBSERVER')")
 		public ResponseEntity<List<Status>> getAllStatuses() throws StatusException
@@ -38,7 +38,7 @@ public class StatusController {
 			List<Status> statuses =	statusService.getAllStatus();
 			return new ResponseEntity<List<Status>>(statuses,HttpStatus.OK);
 		}
-		
+
 		@PostMapping("category/{Id}/status/add")
 		@PreAuthorize("hasRole('ADMIN')")
 		public HttpEntity<? extends Object> addNewStatus(@PathVariable ("Id") Integer id,@RequestBody Status status) throws StatusException
@@ -52,7 +52,7 @@ public class StatusController {
 				return new ResponseEntity<Status>(status1, HttpStatus.OK);
 			}
 		}
-		
+
 		@GetMapping("category/status/getById/{Id}")
 		public ResponseEntity<Status> getStatusById(@PathVariable ("Id") Integer id ) throws StatusException {
 			Status status1 =statusService.getStatusById(id);
@@ -76,7 +76,7 @@ public class StatusController {
 				return ResponseEntity.badRequest().body(e.getMessage());
 			}
 		}
-		
+
 		@DeleteMapping("category/status/delete/{Id}")
 		@PreAuthorize("hasRole('ADMIN')")
 		public ResponseEntity<String> deleteStatusById(@PathVariable ("Id") Integer id ) throws StatusException {
@@ -86,7 +86,7 @@ public class StatusController {
 		}
 
 
-	
+
 }
 
 

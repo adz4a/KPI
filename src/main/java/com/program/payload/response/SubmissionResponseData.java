@@ -1,4 +1,4 @@
-package com.program.model.submission;
+package com.program.payload.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResponseData {
+public class SubmissionResponseData {
     private String fileName;
     private String downloadURL;
     private String fileType;

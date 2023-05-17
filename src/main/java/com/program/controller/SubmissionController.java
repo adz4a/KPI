@@ -1,10 +1,9 @@
 package com.program.controller;
 
 import com.program.exception.SubmissionException;
-import com.program.model.submission.ResponseData;
+import com.program.payload.response.SubmissionResponseData;
 import com.program.model.submission.Submission;
 import com.program.service.SubmissionService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -24,7 +23,7 @@ public class SubmissionController {
     }
 
     @PostMapping("/upload")
-    public ResponseData uploadFile(@RequestParam("file") MultipartFile file) throws SubmissionException {
+    public SubmissionResponseData uploadFile(@RequestParam("file") MultipartFile file) throws SubmissionException {
         Submission submission = submissionService.saveSubmit(file);
 
         String downloadURl = ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -32,7 +31,7 @@ public class SubmissionController {
                 .path(submission.getSubmissionId())
                 .toUriString();
 
-        return new ResponseData(submission.getFileName(), downloadURl, file.getContentType(), file.getSize());
+        return new SubmissionResponseData(submission.getFileName(), downloadURl, file.getContentType(), file.getSize());
     }
 
     @GetMapping("/download/{fileId}")
