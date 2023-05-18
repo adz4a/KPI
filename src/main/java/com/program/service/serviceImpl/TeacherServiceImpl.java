@@ -1,17 +1,16 @@
 package com.program.service.serviceImpl;
 
+import com.program.exception.StatusException;
 import com.program.exception.TeacherException;
-import com.program.model.Event;
 import com.program.model.Status;
 import com.program.model.teacher.Teacher;
-import com.program.model.teacher.TeacherEvent;
 import com.program.repository.*;
 import com.program.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TeacherServiceImpl implements TeacherService {
@@ -37,7 +36,14 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public Teacher getTeacherById(Long id) throws TeacherException {
-        return teacherRepository.findByUserId(id);
+        Optional<Teacher> opt= teacherRepository.findById(id);
+        if(opt.isPresent()) {
+            return opt.get();
+        }
+        else {
+            throw new TeacherException("Status does not exist with Id :" + id);
+        }
+
     }
 
 

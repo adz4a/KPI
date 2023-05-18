@@ -2,9 +2,9 @@ package com.program.service;
 
 import com.program.exception.TeacherException;
 import com.program.model.teacher.Teacher;
-import com.program.model.teacher.TeacherEvent;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TeacherService {
 
