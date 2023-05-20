@@ -1,6 +1,7 @@
 package com.program.controller.teacher;
 
 import com.program.exception.CategoryException;
+import com.program.exception.TeacherEventException;
 import com.program.exception.TeacherException;
 import com.program.model.Category;
 import com.program.model.approve.Approve;
@@ -25,23 +26,23 @@ public class TeacherEventController {
 
     @GetMapping("/teacher/events")
     @PreAuthorize("hasRole('ADMIN') or hasRole('OBSERVER')")
-    public ResponseEntity<List<TeacherEvent>> getAllCategories() throws TeacherException {
+    public ResponseEntity<List<TeacherEvent>> getAllCategories() throws TeacherEventException {
         List<TeacherEvent> teacherEvents =	teacherEventService.getAllTeacherEvent();
         return new ResponseEntity<List<TeacherEvent>>(teacherEvents,HttpStatus.OK);
     }
 
     @GetMapping("event/{eventId}/teachers")
     @PreAuthorize("hasRole('ADMIN') or hasRole('OBSERVER')")
-    public ResponseEntity<List<TeacherEvent>> getTeachersByEvents( @PathVariable("eventId") Integer eventId ) throws TeacherException {
+    public ResponseEntity<List<TeacherEvent>> getTeachersByEvents( @PathVariable("eventId") Integer eventId ) throws TeacherEventException {
         List<TeacherEvent> teacherEvents = teacherEventService.getTeachersByEvent(eventId);
         return new ResponseEntity<List<TeacherEvent>>(teacherEvents, HttpStatus.OK);
     }
 
     @GetMapping("/techer/{teacherId}/event/{eventId}/approve")
     @PreAuthorize("hasRole('ADMIN') or hasRole('OBSERVER')")
-    public ResponseEntity setApproveByEvent(@PathVariable("teacherId") Long teacherId, @PathVariable("eventId") Integer eventId, @RequestBody Approve approve) {
+    public ResponseEntity setApproveByEvent(@PathVariable("teacherId") Long teacherId, @PathVariable("eventId") Integer eventId, @RequestBody Approve approve) throws TeacherEventException {
         teacherEventService.setEventApprove(teacherId,eventId,approve);
-        return new ResponseEntity<>("Event with Id " + eventId + "was set approve status", HttpStatus.OK);
+        return new ResponseEntity<>("The Approve status has been confirmed for the event with this id " + eventId, HttpStatus.OK);
     }
 
 

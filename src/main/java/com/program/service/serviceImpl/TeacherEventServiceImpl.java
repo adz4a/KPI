@@ -1,8 +1,10 @@
 package com.program.service.serviceImpl;
 
+import com.program.exception.TeacherEventException;
 import com.program.exception.TeacherException;
 import com.program.model.approve.Approve;;
 import com.program.model.teacher.TeacherEvent;
+import com.program.repository.ApproveRepository;
 import com.program.repository.TeacherEventRepository;
 import com.program.repository.TeacherRepository;
 import com.program.service.TeacherEventService;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TeacherEventServiceImpl implements TeacherEventService {
@@ -22,14 +25,17 @@ public class TeacherEventServiceImpl implements TeacherEventService {
     @Autowired
     private TeacherRepository teacherRepository;
 
+    @Autowired
+    private ApproveRepository approveRepository;
+
 
     @Override
-    public List<TeacherEvent> getAllTeacherEvent() throws TeacherException {
+    public List<TeacherEvent> getAllTeacherEvent() throws TeacherEventException {
         return teacherEventRepository.findAll();
     }
 
     @Override
-    public List<TeacherEvent> getTeachersByEvent(Integer eventId) throws TeacherException {
+    public List<TeacherEvent> getTeachersByEvent(Integer eventId) throws TeacherEventException {
 
         List<TeacherEvent> teacherEvents = teacherEventRepository.findTeachersByEventId(eventId);
         if (!teacherEvents.isEmpty()) {
@@ -45,9 +51,14 @@ public class TeacherEventServiceImpl implements TeacherEventService {
     }
 
     @Override
-    public void setEventApprove(Long teacherId, Integer eventId, Approve approve) {
+    public void setEventApprove(Long teacherId, Integer eventId, Approve approve) throws TeacherEventException{
         TeacherEvent existingTeacherEvent = teacherEventRepository.findEventAndTeacherId(teacherId,eventId);
-        existingTeacherEvent.setApprove(approve);
+
+        Approve existingApprove = approveRepository.findApproveByName(approve.getApproveName());
+        if (existingApprove == null){
+            throw new TeacherEventException("This approve status doesn't exist");
+        }
+        existingTeacherEvent.setApprove(existingApprove);
         teacherEventRepository.save(existingTeacherEvent);
     }
 
