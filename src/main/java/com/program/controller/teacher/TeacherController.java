@@ -30,7 +30,6 @@ public class TeacherController {
     }
 
     @GetMapping("/teacher/getById/{Id}")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Teacher> getTeacherById(@PathVariable("Id") Long id ) throws TeacherException{
         Teacher teacher = teacherService.getTeacherById(id);
         return new ResponseEntity<Teacher>(teacher,HttpStatus.OK);

@@ -65,8 +65,8 @@ public class EventController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Object> updateEventById(@PathVariable Integer id,@RequestBody Event event) throws EventException {
         try {
-            Event updatedEvent = eventService.updateEventById(id, event);
-            return ResponseEntity.ok(updatedEvent);
+            eventService.updateEventById(id, event);
+            return ResponseEntity.ok("event updated");
         } catch (EventException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

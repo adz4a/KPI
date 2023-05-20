@@ -70,8 +70,8 @@ public class StatusController {
 		@PreAuthorize("hasRole('ADMIN')")
 		public ResponseEntity<Object> updateStatusById(@PathVariable Integer id,@RequestBody Status status) throws StatusException {
 			try {
-				Status updatedStatus = statusService.updateStatusById(id, status);
-				return ResponseEntity.ok(updatedStatus);
+				statusService.updateStatusById(id, status);
+				return ResponseEntity.ok("status updated");
 			} catch (StatusException e) {
 				return ResponseEntity.badRequest().body(e.getMessage());
 			}

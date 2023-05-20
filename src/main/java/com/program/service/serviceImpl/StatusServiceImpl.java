@@ -79,7 +79,7 @@ public class StatusServiceImpl implements StatusService {
 	}
 
 	@Override
-	public Status updateStatusById(Integer id, Status status) throws StatusException {
+	public void updateStatusById(Integer id, Status status) throws StatusException {
 		if (status == null) {
 			throw new StatusException("Status details is Empty...");
 		}
@@ -112,7 +112,7 @@ public class StatusServiceImpl implements StatusService {
 			throw new StatusException("Category with name " + status.getStatusName() + " doesn't exist!");
 		}
 
-		return statusRepository.save(existingStatus);
+		statusRepository.save(existingStatus);
 	}
 
 

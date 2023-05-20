@@ -1,12 +1,8 @@
 package com.program.service.serviceImpl;
 
 import com.program.exception.TeacherException;
-import com.program.model.Event;
-import com.program.model.Status;
-import com.program.model.teacher.Teacher;
+import com.program.model.approve.Approve;;
 import com.program.model.teacher.TeacherEvent;
-import com.program.repository.EventRepository;
-import com.program.repository.StatusRepository;
 import com.program.repository.TeacherEventRepository;
 import com.program.repository.TeacherRepository;
 import com.program.service.TeacherEventService;
@@ -15,16 +11,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TeacherEventServiceImpl implements TeacherEventService {
 
-    @Autowired
-    private StatusRepository statusRepository;
-
-    @Autowired
-    private EventRepository eventRepository;
 
     @Autowired
     private TeacherEventRepository teacherEventRepository;
@@ -53,5 +43,14 @@ public class TeacherEventServiceImpl implements TeacherEventService {
 
         return null;
     }
+
+    @Override
+    public void setEventApprove(Long teacherId, Integer eventId, Approve approve) {
+        TeacherEvent existingTeacherEvent = teacherEventRepository.findEventAndTeacherId(teacherId,eventId);
+        existingTeacherEvent.setApprove(approve);
+        teacherEventRepository.save(existingTeacherEvent);
+    }
+
+
 
 }

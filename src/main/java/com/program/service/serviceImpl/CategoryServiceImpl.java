@@ -40,12 +40,12 @@ public class  CategoryServiceImpl implements CategoryService {
 
 	@Override
 	public Category addNewCategory(Category category) throws CategoryException {
-		
+
 
 		List<Status> status = category.getStatuses();
 
-		if(!status.isEmpty()) {
-			for(Status p: status) {
+		if (!status.isEmpty()) {
+			for (Status p : status) {
 				p.setCategory(category);
 			}
 		}
@@ -55,17 +55,16 @@ public class  CategoryServiceImpl implements CategoryService {
 
 	@Override
 	public Category getCategoryById(Integer CId) throws CategoryException {
-		Optional<Category> opt= categoryRepository.findById(CId);
-		if(opt.isPresent()) {
+		Optional<Category> opt = categoryRepository.findById(CId);
+		if (opt.isPresent()) {
 			return opt.get();
-		}
-		else {
-			throw new CategoryException("Category does not exist with Id :"+CId);
+		} else {
+			throw new CategoryException("Category does not exist with Id :" + CId);
 		}
 	}
-	
+
 	@Override
-	public Category updateCategoryById(Integer id,Category category) throws CategoryException {
+	public void updateCategoryById(Integer id, Category category) throws CategoryException {
 		if (category == null) {
 			throw new CategoryException("Category details is Empty...");
 		}
@@ -80,6 +79,7 @@ public class  CategoryServiceImpl implements CategoryService {
 //		List<Teacher> teachers = teacherRepository.findByCategoryName(existingCategory.getCategoryName());
 //		Setter
 		existingCategory.setCategoryName(category.getCategoryName());
+		categoryRepository.save(existingCategory);
 //		if (!statuses.isEmpty()){
 ////			for (Status status : statuses) {
 //////				Setter
@@ -99,9 +99,8 @@ public class  CategoryServiceImpl implements CategoryService {
 //		} else {
 //			return null;
 //		}
-
-		return categoryRepository.save(existingCategory);
 	}
+
 
 	@Override
 	public void deleteCategoryById(Integer id) throws CategoryException {

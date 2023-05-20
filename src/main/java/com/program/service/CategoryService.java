@@ -13,7 +13,7 @@ public interface CategoryService {
 
 	Category getCategoryById(Integer CId)throws CategoryException;
 
-	Category updateCategoryById(Integer id, Category category) throws CategoryException;
+	void updateCategoryById(Integer id, Category category) throws CategoryException;
 
 	void deleteCategoryById(Integer CId) throws CategoryException;
 

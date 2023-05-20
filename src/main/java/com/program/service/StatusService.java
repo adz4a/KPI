@@ -13,7 +13,7 @@ public interface StatusService {
 
 	  Status getStatusById(Integer Id)throws StatusException;
 
-	  Status updateStatusById(Integer id, Status status) throws StatusException;
+	  void updateStatusById(Integer id, Status status) throws StatusException;
 
 	  void deleteStatusById(Integer Id) throws StatusException;
 

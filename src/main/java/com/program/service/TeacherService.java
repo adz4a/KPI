@@ -12,5 +12,7 @@ public interface TeacherService {
 
     Teacher getTeacherById(Long id) throws TeacherException;
 
+    Teacher getTeacherByUserId(Long id) throws TeacherException;
+
 
 }

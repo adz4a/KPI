@@ -54,7 +54,7 @@ public class ProfileController {
             }
             else {
                 Long id = user.getUserId();
-                Teacher teacher = teacherService.getTeacherById(id);
+                Teacher teacher = teacherService.getTeacherByUserId(id);
                 return new ResponseEntity<Teacher>(teacher, HttpStatus.OK);
             }
         }

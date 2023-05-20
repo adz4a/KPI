@@ -15,7 +15,7 @@ public interface EventService {
 
     Event getEventById(Integer eventId) throws EventException;
 
-    Event updateEventById(Integer id, Event event) throws EventException;
+    void updateEventById(Integer id, Event event) throws EventException;
 
     void deleteEventById(Integer id) throws EventException;
 

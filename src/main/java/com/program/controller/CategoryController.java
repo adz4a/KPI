@@ -61,9 +61,9 @@ public class CategoryController {
 
 		@PutMapping("/category/update/{id}")
 		@PreAuthorize("hasRole('ADMIN')")
-		public ResponseEntity<Category> updateCategoryById(@PathVariable Integer id,@RequestBody Category category) throws CategoryException{
-			Category category1=	categoryservice.updateCategoryById(id, category);
-			return new ResponseEntity<Category>(category1,HttpStatus.OK);
+		public ResponseEntity updateCategoryById(@PathVariable Integer id,@RequestBody Category category) throws CategoryException{
+			categoryservice.updateCategoryById(id, category);
+			return new ResponseEntity<>("Category by Id " + id + " updated" ,HttpStatus.OK);
 		}
 
 		@DeleteMapping("/category/delete/{Id}")

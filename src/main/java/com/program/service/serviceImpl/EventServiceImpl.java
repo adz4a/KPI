@@ -57,7 +57,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Event updateEventById(Integer id, Event event) throws EventException {
+    public void updateEventById(Integer id, Event event) throws EventException {
         if (event == null) {
             throw new EventException("Event details is Empty...");
         }
@@ -79,7 +79,7 @@ public class EventServiceImpl implements EventService {
 //            throw new EventException("Category with this name or Status with this name doesn't exist!");
 //        }
 
-        return eventRepository.save(existingEvent);
+        eventRepository.save(existingEvent);
     }
 
     @Override

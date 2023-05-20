@@ -3,6 +3,7 @@ package com.program.controller.teacher;
 import com.program.exception.CategoryException;
 import com.program.exception.TeacherException;
 import com.program.model.Category;
+import com.program.model.approve.Approve;
 import com.program.model.teacher.TeacherEvent;
 import com.program.service.TeacherEventService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -28,9 +30,19 @@ public class TeacherEventController {
         return new ResponseEntity<List<TeacherEvent>>(teacherEvents,HttpStatus.OK);
     }
 
-    @GetMapping("category/status/event/{eventId}/teachers")
+    @GetMapping("event/{eventId}/teachers")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('OBSERVER')")
     public ResponseEntity<List<TeacherEvent>> getTeachersByEvents( @PathVariable("eventId") Integer eventId ) throws TeacherException {
         List<TeacherEvent> teacherEvents = teacherEventService.getTeachersByEvent(eventId);
         return new ResponseEntity<List<TeacherEvent>>(teacherEvents, HttpStatus.OK);
     }
+
+    @GetMapping("/techer/{teacherId}/event/{eventId}/approve")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('OBSERVER')")
+    public ResponseEntity setApproveByEvent(@PathVariable("teacherId") Long teacherId, @PathVariable("eventId") Integer eventId, @RequestBody Approve approve) {
+        teacherEventService.setEventApprove(teacherId,eventId,approve);
+        return new ResponseEntity<>("Event with Id " + eventId + "was set approve status", HttpStatus.OK);
+    }
+
+
 }

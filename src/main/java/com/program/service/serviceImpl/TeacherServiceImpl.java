@@ -46,5 +46,10 @@ public class TeacherServiceImpl implements TeacherService {
 
     }
 
+    @Override
+    public Teacher getTeacherByUserId(Long id) throws TeacherException {
+        return teacherRepository.findByUserId(id);
+    }
+
 
 }

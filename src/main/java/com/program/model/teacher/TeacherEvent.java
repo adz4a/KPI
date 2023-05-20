@@ -2,8 +2,10 @@ package com.program.model.teacher;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.program.model.Category;
 import com.program.model.Event;
 import com.program.model.Status;
+import com.program.model.approve.Approve;
 import com.program.model.submission.Submission;
 import io.swagger.v3.oas.annotations.Hidden;
 
@@ -34,12 +36,15 @@ public class TeacherEvent {
     @JsonIgnore
     private Submission submission;
 
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "approveId")
+    @JsonIgnore
+    private Approve approve;
 
-    private boolean isApprove;
     private boolean submissionStatus;
 
-    //    @JsonIgnore
-    @JsonProperty("teacher_id")
+    @JsonIgnore
+//    @JsonProperty("teacher_id")
     public Long getTeacherId(){
         return teacher.getTeacherId();
     }
@@ -76,13 +81,17 @@ public class TeacherEvent {
         this.event = event;
     }
 
-    @JsonProperty("is_approve")
-    public boolean isApprove() {
-        return isApprove;
+    @JsonProperty("approve_name")
+    public String getApproveName() {
+        return approve.getApproveName();
     }
 
-    public void setApprove(boolean approve) {
-        isApprove = approve;
+    public Approve getApprove() {
+        return approve;
+    }
+
+    public void setApprove(Approve approve) {
+        this.approve = approve;
     }
 
     @JsonProperty("submission_status")
