@@ -54,13 +54,13 @@ public class User {
     private Set<Role> roles = new HashSet<>();
 
 
-//    @JsonIgnore
+    @JsonIgnore
     public boolean isAdmin() {
         ERole adminRole = ERole.ROLE_ADMIN;
         return roles.stream().map(Role::getName).anyMatch(adminRole::equals);
     }
 
-//    @JsonIgnore
+    @JsonIgnore
     public boolean isTeacher() {
         ERole teacherRole = ERole.ROLE_TEACHER;
         return roles.stream().map(Role::getName).anyMatch(teacherRole::equals);

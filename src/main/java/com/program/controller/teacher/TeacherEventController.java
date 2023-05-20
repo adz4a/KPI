@@ -38,7 +38,7 @@ public class TeacherEventController {
         return new ResponseEntity<List<TeacherEvent>>(teacherEvents, HttpStatus.OK);
     }
 
-    @GetMapping("/techer/{teacherId}/event/{eventId}/approve")
+    @GetMapping("/teacher/{teacherId}/event/{eventId}/approve")
     @PreAuthorize("hasRole('ADMIN') or hasRole('OBSERVER')")
     public ResponseEntity setApproveByEvent(@PathVariable("teacherId") Long teacherId, @PathVariable("eventId") Integer eventId, @RequestBody Approve approve) throws TeacherEventException {
         teacherEventService.setEventApprove(teacherId,eventId,approve);
