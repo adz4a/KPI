@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Objects;
+import java.util.Optional;
 
 
 @Service
@@ -33,21 +34,27 @@ public class SubmissionServiceImpl implements SubmissionService {
     }
 
     @Override
-    public Submission saveSubmit(Long userId,Integer eventId, MultipartFile file) throws SubmissionException {
+    public void saveSubmit(Long userId,Integer eventId,MultipartFile file) throws SubmissionException {
         String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
 
         try {
             if(fileName.contains("..")) {
                 throw new SubmissionException("Sorry! Filename contains invalid path sequence " + fileName);
             }
+
+            Submission submission = new Submission( fileName, file.getContentType(),file.getSize(), file.getBytes());
+
+            submissionRepository.save(submission);
+
             Teacher teacher = teacherRepository.findByUserId(userId);
             TeacherEvent teacherEvent = teacherEventRepository.findEventAndTeacherId(teacher.getTeacherId(), eventId);
 
+            if (teacherEvent!= null) {
+                teacherEvent.setSubmissionStatus(true);
+                teacherEvent.setSubmission(submission);
+                teacherEventRepository.save(teacherEvent);
+            }
 
-            Submission submission = new Submission( fileName, file.getContentType(),file.getSize(), file.getBytes());
-            teacherEvent.setSubmissionStatus(true);
-            teacherEvent.setSubmissionId(submission.getSubmissionId());
-            return submissionRepository.save(submission);
 
         } catch (IOException ex) {
             throw new SubmissionException("Could not store file " + fileName + ". Please try again!", ex);
@@ -60,5 +67,22 @@ public class SubmissionServiceImpl implements SubmissionService {
                 .findById(id)
                 .orElseThrow(
                         () -> new Exception("File not found with Id: " + id));
+    }
+
+    @Override
+    public void setSubmissionIdForTeacher(Long userId,Integer eventId,Submission submission) throws SubmissionException {
+        Submission existingSubmission = submissionRepository.findBySubmissionId(submission.getSubmissionId());
+        if (existingSubmission!= null){
+            Teacher teacher = teacherRepository.findByUserId(userId);
+            TeacherEvent teacherEvent = teacherEventRepository.findEventAndTeacherId(teacher.getTeacherId(), eventId);
+
+            teacherEvent.setSubmissionStatus(true);
+            teacherEvent.setSubmission(existingSubmission);
+
+            teacherEventRepository.save(teacherEvent);
+
+        }
+        else
+            throw new SubmissionException("Submitted file that you indicate doesn't exist!");
     }
 }

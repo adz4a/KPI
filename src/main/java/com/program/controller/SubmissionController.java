@@ -58,33 +58,28 @@ public class SubmissionController {
 
 
     @PostMapping("event/{eventId}/upload")
-    @PreAuthorize("hasRole('TEACHER')")
-    public HttpEntity<? extends Object> uploadFile(HttpServletRequest request, @PathVariable Integer eventId, @RequestParam("file") MultipartFile file) throws SubmissionException, UserException, TeacherException {
+//    @PreAuthorize("hasRole('TEACHER')")
+    public void uploadFile(HttpServletRequest request, @PathVariable Integer eventId, @RequestParam("file") MultipartFile file) throws SubmissionException, UserException, TeacherException {
 
         String token = extractBearerToken(request);
         String email = jwtUtils.getEmailFromJwtToken(token);
         User user = userService.isUserEmailPresent(email);
 
         if (user != null) {
-                Long userId = user.getUserId();
-//                Teacher teacher = teacherService.getTeacherById(id);
-
-        Submission submission = submissionService.saveSubmit(userId,eventId,file);
-        String downloadURl = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/download/")
-                .path(submission.getSubmissionId())
-                .toUriString();
-
-        SubmissionResponseData responseData = new SubmissionResponseData(submission.getFileName(), downloadURl, file.getContentType(), file.getSize());
-
-        return new ResponseEntity<SubmissionResponseData>(responseData,HttpStatus.OK);
-        }else
-            return null;
+            Long userId = user.getUserId();
+            submissionService.saveSubmit(userId, eventId,file);
+//            submissionService.setSubmissionIdForTeacher(userId, eventId,submission);
+        }
 
     }
 
+
     @GetMapping("/download/{fileId}")
-    public ResponseEntity<Resource> downloadFile(@PathVariable String fileId) throws Exception {
+    public ResponseEntity<Resource> downloadFile(HttpServletRequest request,@PathVariable String fileId) throws Exception {
+        String token = extractBearerToken(request);
+        String email = jwtUtils.getEmailFromJwtToken(token);
+        User user = userService.isUserEmailPresent(email);
+
         Submission submission = submissionService.getSubmission(fileId);
         return  ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(submission.getFileType()))

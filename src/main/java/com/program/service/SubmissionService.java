@@ -6,7 +6,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface SubmissionService {
 
-    Submission saveSubmit(Long userId,Integer eventId, MultipartFile multipartFile) throws SubmissionException;
+    void saveSubmit(Long userId,Integer eventId,MultipartFile multipartFile) throws SubmissionException;
 
     Submission getSubmission(String submissionId) throws Exception;
+
+    void setSubmissionIdForTeacher(Long userId,Integer eventId,Submission submission) throws SubmissionException;
 }

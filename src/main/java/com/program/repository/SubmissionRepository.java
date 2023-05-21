@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public interface SubmissionRepository extends JpaRepository<Submission,String> {
 
-//    @Query("SELECT s FROM Submission s WHERE s.submissionValue =:submissionValue")
-//    Submission findByValue(String submissionValue) throws Exception;
+    @Query("SELECT s FROM Submission s WHERE s.submissionId =:submissionId")
+    Submission findBySubmissionId(String submissionId);
 
 }

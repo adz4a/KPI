@@ -1,9 +1,6 @@
 package com.program.controller.teacher;
 
-import com.program.exception.CategoryException;
 import com.program.exception.TeacherEventException;
-import com.program.exception.TeacherException;
-import com.program.model.Category;
 import com.program.model.approve.Approve;
 import com.program.model.teacher.TeacherEvent;
 import com.program.service.TeacherEventService;

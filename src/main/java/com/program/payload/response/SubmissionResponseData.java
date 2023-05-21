@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class SubmissionResponseData {
     private String fileName;
-    private String downloadURL;
+//    private String downloadURL;
     private String fileType;
     private long fileSize;
 }
