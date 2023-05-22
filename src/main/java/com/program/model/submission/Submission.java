@@ -2,14 +2,11 @@ package com.program.model.submission;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.program.model.Event;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Data@NoArgsConstructor
@@ -71,4 +68,13 @@ public class Submission {
         this.size = size;
     }
 
+    @JsonIgnore
+    public byte[] getData() {
+        return data;
+    }
+
+
+    public void setData(byte[] data) {
+        this.data = data;
+    }
 }

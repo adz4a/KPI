@@ -10,5 +10,4 @@ public interface SubmissionService {
 
     Submission getSubmission(String submissionId) throws Exception;
 
-    void setSubmissionIdForTeacher(Long userId,Integer eventId,Submission submission) throws SubmissionException;
 }

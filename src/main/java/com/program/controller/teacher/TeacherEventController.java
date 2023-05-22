@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -35,7 +32,7 @@ public class TeacherEventController {
         return new ResponseEntity<List<TeacherEvent>>(teacherEvents, HttpStatus.OK);
     }
 
-    @GetMapping("/teacher/{teacherId}/event/{eventId}/approve")
+    @PostMapping("/teacher/{teacherId}/event/{eventId}/approve")
     @PreAuthorize("hasRole('ADMIN') or hasRole('OBSERVER')")
     public ResponseEntity setApproveByEvent(@PathVariable("teacherId") Long teacherId, @PathVariable("eventId") Integer eventId, @RequestBody Approve approve) throws TeacherEventException {
         teacherEventService.setEventApprove(teacherId,eventId,approve);

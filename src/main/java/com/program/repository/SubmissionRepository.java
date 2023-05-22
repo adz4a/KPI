@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional
-public interface SubmissionRepository extends JpaRepository<Submission,String> {
+public interface SubmissionRepository extends JpaRepository<Submission, String> {
 
     @Query("SELECT s FROM Submission s WHERE s.submissionId =:submissionId")
     Submission findBySubmissionId(String submissionId);

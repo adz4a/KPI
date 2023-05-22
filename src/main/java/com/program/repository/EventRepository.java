@@ -1,7 +1,6 @@
 package com.program.repository;
 
 import com.program.model.Event;
-import com.program.model.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -18,8 +17,11 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
     @Query("SELECT e FROM Event e WHERE e.status.statusId = :statusId")
     List<Event> findByStatusId(Integer statusId);
 
-    @Query("SELECT e FROM Event e WHERE e.status.statusId = :eventId")
+    @Query("SELECT e FROM Event e WHERE e.eventId = :eventId")
     List<Event> findByEventId(Integer eventId);
+
+    @Query("SELECT e FROM Event e WHERE e.eventId = :eventId")
+    Event findEventById(Integer eventId);
 
     @Modifying
     @Query("UPDATE Event e SET e.status = null WHERE e.status.statusId = :statusId")

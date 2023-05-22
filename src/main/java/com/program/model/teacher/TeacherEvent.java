@@ -2,16 +2,12 @@ package com.program.model.teacher;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.program.model.Category;
 import com.program.model.Event;
-import com.program.model.Status;
 import com.program.model.approve.Approve;
-import com.program.model.submission.Submission;
-import io.swagger.v3.oas.annotations.Hidden;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+
+
 
 @Entity
 public class TeacherEvent {
@@ -31,17 +27,13 @@ public class TeacherEvent {
     @JsonIgnore
     private Event event;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "submissionId")
-    @JsonIgnore
-    private Submission submission;
-
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "approveId")
     @JsonIgnore
     private Approve approve;
 
     private boolean submissionStatus;
+
 
     @JsonIgnore
 //    @JsonProperty("teacher_id")
@@ -103,15 +95,4 @@ public class TeacherEvent {
         this.submissionStatus = submissionStatus;
     }
 
-    @JsonProperty("submission_id")
-    public String getSubmissionId(){
-        if (submission!=null){
-        return submission.getSubmissionId();
-        }else
-            return null;
-    }
-
-    public void setSubmission(Submission submission) {
-        this.submission = submission;
-    }
 }
