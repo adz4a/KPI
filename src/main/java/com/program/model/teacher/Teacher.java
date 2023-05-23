@@ -2,6 +2,8 @@ package com.program.model.teacher;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.program.model.Category;
+import com.program.model.Department;
 import com.program.model.User;
 import com.program.model.submission.TeacherSubmission;
 import javax.persistence.*;
@@ -29,6 +31,11 @@ public class Teacher {
 
     @OneToMany(mappedBy = "teacher")
     private List<TeacherSubmission> teacherSubmissions;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "departmentId")
+    @JsonIgnore
+    private Department department;
 
     @JsonProperty("teacher_id")
     public Long getTeacherId() {
@@ -80,6 +87,11 @@ public class Teacher {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    @JsonProperty("department_name")
+    public String getDepartmentName(){
+        return department.getDepartmentName();
     }
 
     @JsonProperty("teacher_events")

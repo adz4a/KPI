@@ -14,7 +14,6 @@ public class Category {
 	@Column(name="category_id")
 	private Integer categoryId;
 
-//	@JsonProperty("category_name")
 	private String categoryName;
 
 

@@ -46,10 +46,11 @@ public class TeacherEvent {
         return teacher.getUserName();
     }
 
-    @JsonProperty("teacher_status")
-    public String getTeacherStatus(){
-        return teacher.getStatusName();
+    @JsonProperty("department_name")
+    public String getTeacherDepartment(){
+        return teacher.getDepartmentName();
     }
+
     public void setTeacher(Teacher teacher) {
         this.teacher = teacher;
     }

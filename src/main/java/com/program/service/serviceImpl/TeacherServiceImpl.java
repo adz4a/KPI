@@ -41,7 +41,7 @@ public class TeacherServiceImpl implements TeacherService {
             return opt.get();
         }
         else {
-            throw new TeacherException("Status does not exist with Id :" + id);
+            throw new TeacherException("Teacher does not exist with Id :" + id);
         }
 
     }
