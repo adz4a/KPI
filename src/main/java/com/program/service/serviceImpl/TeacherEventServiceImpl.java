@@ -3,6 +3,7 @@ package com.program.service.serviceImpl;
 import com.program.exception.TeacherEventException;
 import com.program.exception.TeacherException;
 import com.program.model.approve.Approve;;
+import com.program.model.teacher.Teacher;
 import com.program.model.teacher.TeacherEvent;
 import com.program.repository.ApproveRepository;
 import com.program.repository.TeacherEventRepository;
@@ -62,6 +63,27 @@ public class TeacherEventServiceImpl implements TeacherEventService {
         teacherEventRepository.save(existingTeacherEvent);
     }
 
+    @Override
+    public void addComment(Long userId, Integer eventId, String comment) throws TeacherEventException {
+        Teacher teacher = teacherRepository.findByUserId(userId);
+        TeacherEvent existingTeacherEvent = teacherEventRepository.findEventAndTeacherId(teacher.getTeacherId(),eventId);
+        if (existingTeacherEvent==null){
+            throw new TeacherEventException("This teacher' event doesn't exist");
+        }
+        existingTeacherEvent.setComment(comment);
+        teacherEventRepository.save(existingTeacherEvent);
+    }
+
+    @Override
+    public void deleteComment(Long userId, Integer eventId) throws TeacherEventException {
+        Teacher teacher = teacherRepository.findByUserId(userId);
+        TeacherEvent existingTeacherEvent = teacherEventRepository.findEventAndTeacherId(teacher.getTeacherId(),eventId);
+        if (existingTeacherEvent==null){
+            throw new TeacherEventException("This teacher' event doesn't exist");
+        }
+        existingTeacherEvent.setComment(null);
+        teacherEventRepository.save(existingTeacherEvent);
+    }
 
 
 }

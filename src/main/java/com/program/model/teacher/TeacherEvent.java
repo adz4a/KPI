@@ -34,6 +34,8 @@ public class TeacherEvent {
 
     private boolean submissionStatus;
 
+    private String comment;
+
 
     @JsonIgnore
 //    @JsonProperty("teacher_id")
@@ -90,6 +92,15 @@ public class TeacherEvent {
     @JsonProperty("submission_status")
     public boolean isSubmissionStatus() {
         return submissionStatus;
+    }
+
+    @JsonProperty("comment")
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     public void setSubmissionStatus(boolean submissionStatus) {

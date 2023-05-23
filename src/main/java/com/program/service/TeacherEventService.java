@@ -15,5 +15,9 @@ public interface TeacherEventService {
 
     void setEventApprove(Long teacherId, Integer eventId, Approve approve) throws TeacherEventException;
 
+    void addComment(Long userId, Integer eventId, String comment) throws TeacherEventException;
+
+    void deleteComment(Long userId, Integer eventId) throws TeacherEventException;
+
 
 }

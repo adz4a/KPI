@@ -5,6 +5,7 @@ import com.program.exception.UserException;
 import com.program.helper.jwt.JwtUtils;
 import com.program.model.teacher.Teacher;
 import com.program.model.User;
+import com.program.service.JwtService;
 import com.program.service.TeacherService;
 import com.program.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,24 +29,19 @@ public class ProfileController {
     public TeacherService teacherService;
 
     @Autowired
-    AuthenticationManager authenticationManager;
+    public AuthenticationManager authenticationManager;
 
     @Autowired
-    JwtUtils jwtUtils;
+    public JwtUtils jwtUtils;
 
-    private String extractBearerToken(HttpServletRequest request) {
-        String authorizationHeader = request.getHeader("Authorization");
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            return authorizationHeader.substring(7);
-        }
-        return null;
-    }
+    @Autowired
+    public JwtService jwtService;
 
 
     @GetMapping("/profile")
     @PreAuthorize("hasRole('TEACHER')")
     public HttpEntity<? extends Object> getUser(HttpServletRequest request) throws TeacherException, UserException {
-        String token = extractBearerToken(request);
+        String token = jwtService.extractBearerToken(request);
         String email = jwtUtils.getEmailFromJwtToken(token);
         User user = userService.isUserEmailPresent(email);
         if (user != null) {

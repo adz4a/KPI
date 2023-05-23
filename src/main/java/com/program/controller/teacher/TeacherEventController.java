@@ -18,6 +18,7 @@ public class TeacherEventController {
     @Autowired
     public TeacherEventService teacherEventService;
 
+
     @GetMapping("/teacher/events")
     @PreAuthorize("hasRole('ADMIN') or hasRole('OBSERVER')")
     public ResponseEntity<List<TeacherEvent>> getAllCategories() throws TeacherEventException {
