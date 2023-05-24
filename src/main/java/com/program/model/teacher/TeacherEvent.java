@@ -4,9 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.program.model.Event;
 import com.program.model.approve.Approve;
+import com.program.model.role.ERole;
+import com.program.model.role.Role;
 
 import javax.persistence.*;
-
+import java.util.Objects;
 
 
 @Entity
@@ -79,6 +81,24 @@ public class TeacherEvent {
     @JsonProperty("approve_name")
     public String getApproveName() {
         return approve.getApproveName();
+    }
+
+    @JsonIgnore
+    public boolean isAccept() {
+        String approveName = "Accepted";
+        return Objects.equals(approve.getApproveName(), approveName);
+    }
+
+    @JsonIgnore
+    public boolean isReject() {
+        String approveName = "Rejected";
+        return Objects.equals(approve.getApproveName(), approveName);
+    }
+
+    @JsonIgnore
+    public boolean isNone() {
+        String approveName = "none";
+        return Objects.equals(approve.getApproveName(), approveName);
     }
 
     public Approve getApprove() {

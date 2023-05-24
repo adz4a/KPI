@@ -6,6 +6,6 @@ public class TeacherEventException extends Exception{
     }
 
     public TeacherEventException(String message) {
-
+        super(message);
     }
 }

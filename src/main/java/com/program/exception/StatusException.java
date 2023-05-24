@@ -7,8 +7,8 @@ public class StatusException extends Exception {
 		// TODO Auto-generated constructor stub
 	}
 
-	public StatusException(String string) {
-		// TODO Auto-generated constructor stub
+	public StatusException(String message) {
+		super(message);
 	}
 
 }

@@ -8,8 +8,7 @@ public class TeacherException extends Exception{
     }
 
     public TeacherException(String message) {
-//        super(message);
-        // TODO Auto-generated constructor stub
+        super(message);
     }
 }
 

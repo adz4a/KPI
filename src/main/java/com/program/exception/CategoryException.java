@@ -7,8 +7,8 @@ public class CategoryException extends Exception {
 		// TODO Auto-generated constructor stub
 	}
 
-	 public CategoryException(String string) {
-		// TODO Auto-generated constructor stub
+	 public CategoryException(String message) {
+		 super(message);
 	}
 	
 	

@@ -26,6 +26,9 @@ public class Teacher {
     private String categoryName;
     private String statusName;
 
+    @Column(columnDefinition = "integer default 0")
+    private Integer KpiSum;
+
     @OneToMany(mappedBy = "teacher")
     private List<TeacherEvent> teacherEvents;
 
@@ -92,6 +95,19 @@ public class Teacher {
     @JsonProperty("department_name")
     public String getDepartmentName(){
         return department.getDepartmentName();
+    }
+
+    public void setDepartment(Department department) {
+        this.department = department;
+    }
+
+    @JsonProperty("kpi_sum")
+    public Integer getKpiSum(){
+        return KpiSum;
+    }
+
+    public void setKpiSum(Integer kpiSum) {
+        KpiSum = kpiSum;
     }
 
     @JsonProperty("teacher_events")

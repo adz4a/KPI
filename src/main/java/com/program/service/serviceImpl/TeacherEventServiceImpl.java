@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -54,14 +55,48 @@ public class TeacherEventServiceImpl implements TeacherEventService {
     @Override
     public void setEventApprove(Long teacherId, Integer eventId, Approve approve) throws TeacherEventException{
         TeacherEvent existingTeacherEvent = teacherEventRepository.findEventAndTeacherId(teacherId,eventId);
-
+        Teacher existingTeacher = teacherRepository.findByTeacherId(teacherId);
         Approve existingApprove = approveRepository.findApproveByName(approve.getApproveName());
         if (existingApprove == null){
             throw new TeacherEventException("This approve status doesn't exist");
         }
-        existingTeacherEvent.setApprove(existingApprove);
-        teacherEventRepository.save(existingTeacherEvent);
+        if (existingTeacherEvent!=null) {
+            if (!Objects.equals(existingApprove.getApproveName(), existingTeacherEvent.getApproveName())) {
+
+                if (existingTeacherEvent.isAccept()){
+                    existingTeacherEvent.setApprove(existingApprove);
+                    teacherEventRepository.save(existingTeacherEvent);
+                    if (existingTeacherEvent.isReject() || existingTeacherEvent.isNone()) {
+                        if (existingTeacher.getKpiSum() > 0) {
+                            if (existingTeacher.getKpiSum() >= existingTeacherEvent.getEventPercentage()) {
+                                Integer sum = existingTeacher.getKpiSum() - existingTeacherEvent.getEventPercentage();
+                                existingTeacher.setKpiSum(sum);
+                            }
+                        }
+                    }
+                }
+
+                if (existingTeacherEvent.isNone() || existingTeacherEvent.isReject()){
+                    existingTeacherEvent.setApprove(existingApprove);
+                    teacherEventRepository.save(existingTeacherEvent);
+                    if (existingTeacherEvent.isAccept()) {
+                        Integer sum = existingTeacher.getKpiSum() + existingTeacherEvent.getEventPercentage();
+                        existingTeacher.setKpiSum(sum);
+                    }
+                        }
+
+                    } else
+                         throw new TeacherEventException("This approve status already set!");
+                }else
+                    throw new TeacherEventException("An error related to the teacher's id or event's id ");
+
+                teacherRepository.save(existingTeacher);
     }
+
+
+
+
+
 
     @Override
     public void addComment(Long userId, Integer eventId, String comment) throws TeacherEventException {

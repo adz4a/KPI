@@ -8,6 +8,6 @@ public class RoleException extends Exception{
     }
 
     public RoleException(String message) {
-        // TODO Auto-generated constructor stub
+        super(message);
     }
 }

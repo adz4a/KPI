@@ -1,6 +1,7 @@
 package com.program.model;
 
 import com.fasterxml.jackson.annotation.*;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +15,8 @@ public class Category {
 	@Column(name="category_id")
 	private Integer categoryId;
 
+	@Column(unique = true)
 	private String categoryName;
-
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "category")
 	private List<Status> statuses =new ArrayList<>();

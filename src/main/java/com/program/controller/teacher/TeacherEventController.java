@@ -36,8 +36,13 @@ public class TeacherEventController {
     @PostMapping("/teacher/{teacherId}/event/{eventId}/approve")
     @PreAuthorize("hasRole('ADMIN') or hasRole('OBSERVER')")
     public ResponseEntity setApproveByEvent(@PathVariable("teacherId") Long teacherId, @PathVariable("eventId") Integer eventId, @RequestBody Approve approve) throws TeacherEventException {
-        teacherEventService.setEventApprove(teacherId,eventId,approve);
-        return new ResponseEntity<>("The Approve status has been confirmed for the event with this id " + eventId, HttpStatus.OK);
+        try {
+            teacherEventService.setEventApprove(teacherId, eventId, approve);
+            return new ResponseEntity<>("The Approve status has been confirmed for the event with this id " + eventId, HttpStatus.OK);
+        } catch (TeacherEventException ex) {
+            String errorMessage = "Error setting the event approve status: " + ex.getMessage();
+            return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 
