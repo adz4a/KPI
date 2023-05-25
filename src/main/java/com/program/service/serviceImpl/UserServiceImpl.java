@@ -50,7 +50,6 @@ public class UserServiceImpl implements UserService {
         return users;
     }
 
-
     @Override
     public User createUser(User user) throws UserException {
         user.setPassword(user.getPassword());
@@ -70,7 +69,7 @@ public class UserServiceImpl implements UserService {
             return user;
         }
         else
-            return null;
+            throw new UserException("This user email doesn't exist!");
     }
 
     @Override

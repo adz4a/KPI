@@ -30,40 +30,47 @@ public class StatusController {
 	public StatusRepository statusRepository;
 
 
-
 		@GetMapping("/statuses")
 		@PreAuthorize("hasRole('ADMIN') or hasRole('OBSERVER')")
-		public ResponseEntity<List<Status>> getAllStatuses() throws StatusException
-		{
+		public ResponseEntity<List<Status>> getAllStatuses() throws StatusException {
 			List<Status> statuses =	statusService.getAllStatus();
 			return new ResponseEntity<List<Status>>(statuses,HttpStatus.OK);
 		}
 
 		@PostMapping("category/{Id}/status/add")
 		@PreAuthorize("hasRole('ADMIN')")
-		public HttpEntity<? extends Object> addNewStatus(@PathVariable ("Id") Integer id,@RequestBody Status status) throws StatusException
-		{
-			Status status1 = statusService.addNewStatus(id,status);
-
-			if (status1==null) {
-				return new ResponseEntity<String>("Status details is empty or category which you indicated does not exist!", HttpStatus.OK);
-			}
-			else {
+		public HttpEntity<? extends Object> addNewStatus(@PathVariable ("Id") Integer id,@RequestBody Status status) throws StatusException {
+			try {
+				Status status1 = statusService.addNewStatus(id,status);
 				return new ResponseEntity<Status>(status1, HttpStatus.OK);
+			}catch (StatusException ex) {
+				String errorMessage = "Error setting: " + ex.getMessage();
+				return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		}
 
 		@GetMapping("category/status/getById/{Id}")
-		public ResponseEntity<Status> getStatusById(@PathVariable ("Id") Integer id ) throws StatusException {
-			Status status1 =statusService.getStatusById(id);
-			return new ResponseEntity<Status>(status1,HttpStatus.OK);
+		@PreAuthorize("hasRole('ADMIN') or hasRole('OBSERVER')")
+		public ResponseEntity getStatusById(@PathVariable ("Id") Integer id ) throws StatusException {
+			try {
+				Status status1 =statusService.getStatusById(id);
+				return new ResponseEntity<Status>(status1,HttpStatus.OK);
+			}catch (StatusException ex) {
+				String errorMessage = "Error setting: " + ex.getMessage();
+				return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
+			}
 		}
 
 		@GetMapping("category/status/update/{Id}")
 		@PreAuthorize("hasRole('ADMIN')")
-		public ResponseEntity<Status> updateStatusById(@PathVariable ("Id") Integer id ) throws StatusException {
-		Status status1 =statusService.getStatusById(id);
-		return new ResponseEntity<Status>(status1,HttpStatus.OK);
+		public ResponseEntity updateStatusById(@PathVariable ("Id") Integer id ) throws StatusException {
+			try {
+				Status statusUpdate =statusService.getStatusById(id);
+				return new ResponseEntity<Status>(statusUpdate,HttpStatus.OK);
+			}catch (StatusException ex) {
+				String errorMessage = "Error setting in update: " + ex.getMessage();
+				return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
+			}
 		}
 
 		@PutMapping("category/status/update/{id}")
@@ -71,18 +78,23 @@ public class StatusController {
 		public ResponseEntity<Object> updateStatusById(@PathVariable Integer id,@RequestBody Status status) throws StatusException {
 			try {
 				statusService.updateStatusById(id, status);
-				return ResponseEntity.ok("status updated");
-			} catch (StatusException e) {
-				return ResponseEntity.badRequest().body(e.getMessage());
+				return new ResponseEntity<>("status updated",HttpStatus.OK);
+			}catch (StatusException ex) {
+				String errorMessage = "Error setting: " + ex.getMessage();
+				return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		}
 
 		@DeleteMapping("category/status/delete/{Id}")
 		@PreAuthorize("hasRole('ADMIN')")
-		public ResponseEntity<String> deleteStatusById(@PathVariable ("Id") Integer id ) throws StatusException {
-			statusService.deleteStatusById(id);
-			return new ResponseEntity<String>("Status with this Id deleted",HttpStatus.OK);
-
+		public ResponseEntity deleteStatusById(@PathVariable ("Id") Integer id ) throws StatusException {
+			try{
+				statusService.deleteStatusById(id);
+				return new ResponseEntity<>("Status with this Id deleted",HttpStatus.OK);
+			}catch (StatusException ex) {
+				String errorMessage = "Error setting: " + ex.getMessage();
+				return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
+			}
 		}
 
 

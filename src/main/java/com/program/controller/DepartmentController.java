@@ -25,9 +25,15 @@ public class DepartmentController {
     }
 
     @GetMapping("/department/getById/{Id}")
-    public ResponseEntity<Department> getTeacherById(@PathVariable("Id") Integer id ) throws DepartmentException{
-        Department department = departmentService.getDepartmentById(id);
-        return new ResponseEntity<Department>(department,HttpStatus.OK);
+    public ResponseEntity getTeacherById(@PathVariable("Id") Integer id ) throws DepartmentException{
+        try {
+            Department department = departmentService.getDepartmentById(id);
+            return new ResponseEntity<Department>(department,HttpStatus.OK);
+        }catch (DepartmentException ex){
+            String errorMessage = "Error: " + ex.getMessage();
+            return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
 }

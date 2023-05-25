@@ -17,16 +17,20 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody User newUser) throws UserException {
-
-        User user = userService.getUserByEmail(newUser.getEmail());
-        if (user != null) {
-            return new ResponseEntity<>("User already exists.", HttpStatus.BAD_REQUEST);
+        try {
+            User user = userService.getUserByEmail(newUser.getEmail());
+            if (user != null) {
+                return new ResponseEntity<>("User already exists.", HttpStatus.BAD_REQUEST);
+            }
+            userService.createUser(newUser);
+            return new ResponseEntity<>("Created user successfully, please login.", HttpStatus.OK);
+        }catch (UserException ex){
+            String errorMessage = "Error: " + ex.getMessage();
+            return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        userService.createUser(newUser);
-        return new ResponseEntity<>("Created user successfully, please login.", HttpStatus.OK);
+
     }
 
     @GetMapping("/users")
@@ -36,19 +40,29 @@ public class UserController {
         return new ResponseEntity<List<User>>(users,HttpStatus.OK);
     }
 
-
     @GetMapping("/user/getById/{Id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<User> getCategoryById(@PathVariable("Id") Long id ) throws UserException {
-        User user1 = userService.getUserById(id);
-        return new ResponseEntity<User>(user1,HttpStatus.OK);
+    public ResponseEntity getUserById(@PathVariable("Id") Long id ) throws UserException {
+        try {
+            User user1 = userService.getUserById(id);
+            return new ResponseEntity<User>(user1,HttpStatus.OK);
+        }catch (UserException ex){
+            String errorMessage = "Error: " + ex.getMessage();
+            return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PostMapping("/user/update/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<User> updateUserById( @PathVariable Long id, @RequestBody User user) throws UserException{
-        User user1=	userService.updateUser(id,user);
-        return new ResponseEntity<User>(user1,HttpStatus.OK);
+    public ResponseEntity updateUserById( @PathVariable Long id, @RequestBody User user) throws UserException{
+        try {
+            User user1=	userService.updateUser(id,user);
+            return new ResponseEntity<User>(user1,HttpStatus.OK);
+        }catch (UserException ex){
+            String errorMessage = "Error: " + ex.getMessage();
+            return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
 

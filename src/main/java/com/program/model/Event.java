@@ -31,7 +31,6 @@ public class Event {
         super();
     }
 
-
     @JsonProperty("event_id")
     public Integer getEventId() {
         return eventId;
@@ -72,17 +71,19 @@ public class Event {
         return status;
     }
 
+    @JsonProperty("category_name")
+    public String getCategoryName(){
+        return status.getCategoryName();
+    }
+
+    @JsonProperty("status_name")
+    public String getStatusName(){
+        return status.getStatusName();
+    }
+
     @JsonIgnore
     public Integer getStatusId(){
         return status.getStatusId();
     }
 
-    @Override
-    public String toString() {
-        return "Event{" +
-                "eventId=" + eventId +
-                ", eventName='" + eventName + '\'' +
-                ", status=" + status +
-                '}';
-    }
 }

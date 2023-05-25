@@ -36,11 +36,11 @@ public class EventServiceImpl implements EventService {
                 return eventRepository.save(event);
             }
             else {
-                return null;
+                throw new EventException("Status that you indicated doesn't exist! Status Id: " + statusId);
             }
         }
         else {
-            throw new EventException("Status details is Empty...");
+            throw new EventException("Category details is Empty...");
         }
     }
 
@@ -51,7 +51,7 @@ public class EventServiceImpl implements EventService {
             return opt.get();
         }
         else {
-            throw new EventException("Event does not exist with Id :"+eventId);
+            throw new EventException("Event does not exist with Id : "+eventId);
 
         }
     }
@@ -89,7 +89,7 @@ public class EventServiceImpl implements EventService {
             eventRepository.deleteByEventId(id);
         }
         else {
-            throw new EventException("Event does not exist with Id :"+ id);
+            throw new EventException("Event does not exist with Id : "+ id);
 
         }
     }

@@ -28,9 +28,15 @@ public class TeacherEventController {
 
     @GetMapping("event/{eventId}/teachers")
     @PreAuthorize("hasRole('ADMIN') or hasRole('OBSERVER')")
-    public ResponseEntity<List<TeacherEvent>> getTeachersByEvents( @PathVariable("eventId") Integer eventId ) throws TeacherEventException {
-        List<TeacherEvent> teacherEvents = teacherEventService.getTeachersByEvent(eventId);
-        return new ResponseEntity<List<TeacherEvent>>(teacherEvents, HttpStatus.OK);
+    public ResponseEntity getTeachersByEvents( @PathVariable("eventId") Integer eventId ) throws TeacherEventException {
+        try {
+            List<TeacherEvent> teacherEvents = teacherEventService.getTeachersByEvent(eventId);
+            return new ResponseEntity<List<TeacherEvent>>(teacherEvents, HttpStatus.OK);
+        }catch (TeacherEventException ex){
+            String errorMessage = "Error: " + ex.getMessage();
+            return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
     @PostMapping("/teacher/{teacherId}/event/{eventId}/approve")

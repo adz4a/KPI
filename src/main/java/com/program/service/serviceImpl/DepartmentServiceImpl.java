@@ -30,7 +30,7 @@ public class DepartmentServiceImpl implements DepartmentService {
             return opt.get();
         }
         else {
-            throw new DepartmentException("Department does not exist with Id :" + id);
+            throw new DepartmentException("Department does not exist with Id: " + id);
         }
     }
 }

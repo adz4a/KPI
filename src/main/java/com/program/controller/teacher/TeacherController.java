@@ -30,9 +30,15 @@ public class TeacherController {
     }
 
     @GetMapping("/teacher/getById/{Id}")
-    public ResponseEntity<Teacher> getTeacherById(@PathVariable("Id") Long id ) throws TeacherException{
-        Teacher teacher = teacherService.getTeacherById(id);
-        return new ResponseEntity<Teacher>(teacher,HttpStatus.OK);
+    public ResponseEntity getTeacherById(@PathVariable("Id") Long id ) throws TeacherException{
+        try {
+            Teacher teacher = teacherService.getTeacherById(id);
+            return new ResponseEntity<Teacher>(teacher,HttpStatus.OK);
+        }catch (TeacherException ex){
+            String errorMessage = "Error: " + ex.getMessage();
+            return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
 

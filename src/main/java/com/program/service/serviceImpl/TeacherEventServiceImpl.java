@@ -38,7 +38,6 @@ public class TeacherEventServiceImpl implements TeacherEventService {
 
     @Override
     public List<TeacherEvent> getTeachersByEvent(Integer eventId) throws TeacherEventException {
-
         List<TeacherEvent> teacherEvents = teacherEventRepository.findTeachersByEventId(eventId);
         if (!teacherEvents.isEmpty()) {
             List<TeacherEvent> newTeacherEvent = new ArrayList<>();
@@ -46,9 +45,7 @@ public class TeacherEventServiceImpl implements TeacherEventService {
                 newTeacherEvent.add(teacherEvent);
             }
             return newTeacherEvent;
-
         }
-
         return null;
     }
 
@@ -92,10 +89,6 @@ public class TeacherEventServiceImpl implements TeacherEventService {
 
                 teacherRepository.save(existingTeacher);
     }
-
-
-
-
 
 
     @Override

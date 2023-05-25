@@ -59,7 +59,7 @@ public class  CategoryServiceImpl implements CategoryService {
 		if (opt.isPresent()) {
 			return opt.get();
 		} else {
-			throw new CategoryException("Category does not exist with Id :" + CId);
+			throw new CategoryException("Category does not exist with Id : " + CId);
 		}
 	}
 
@@ -128,7 +128,7 @@ public class  CategoryServiceImpl implements CategoryService {
 			}
 			categoryRepository.deleteByCategoryId(id);
 		} else {
-			throw new CategoryException("Category does not exist with Id :" + id);
+			throw new CategoryException("Category does not exist with Id: " + id);
 		}
 	}
 	

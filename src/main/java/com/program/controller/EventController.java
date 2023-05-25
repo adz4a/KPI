@@ -26,39 +26,45 @@ public class EventController {
 
     @GetMapping("/events")
     @PreAuthorize("hasRole('ADMIN') or hasRole('OBSERVER')")
-    public ResponseEntity<List<Event>> getAllEvents() throws EventException
-    {
+    public ResponseEntity<List<Event>> getAllEvents() throws EventException {
         List<Event> events = eventService.getAllEvents();
         return new ResponseEntity<List<Event>>(events, HttpStatus.OK);
     }
 
     @PostMapping("status/{Id}/event/add")
     @PreAuthorize("hasRole('ADMIN')")
-    public HttpEntity<? extends Object> addNewEvent(@PathVariable("Id") Integer id, @RequestBody Event event) throws EventException
-    {
-        Event newEvent = eventService.addNewEvent(id,event);
-
-        if (newEvent==null) {
-            return new ResponseEntity<String>("Status details is empty!", HttpStatus.OK);
-        }
-        else {
+    public HttpEntity<? extends Object> addNewEvent(@PathVariable("Id") Integer id, @RequestBody Event event) throws EventException {
+        try{
+            Event newEvent = eventService.addNewEvent(id,event);
             return new ResponseEntity<Event>(newEvent, HttpStatus.OK);
+        }catch (EventException ex) {
+            String errorMessage = "Error setting: " + ex.getMessage();
+            return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping("status/event/getById/{Id}")
-    public ResponseEntity<Event> getEventById(@PathVariable("Id") Integer id ) throws EventException
-    {
-        Event event = eventService.getEventById(id);
-        return new ResponseEntity<Event>(event,HttpStatus.OK);
+    @PreAuthorize("hasRole('ADMIN') or hasRole('OBSERVER')")
+    public ResponseEntity getEventById(@PathVariable("Id") Integer id ) throws EventException {
+        try {
+            Event event = eventService.getEventById(id);
+            return new ResponseEntity<Event>(event,HttpStatus.OK);
+        }catch (EventException ex) {
+            String errorMessage = "Error setting: " + ex.getMessage();
+            return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping("status/event/update/{Id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Event> updateEventById(@PathVariable("Id") Integer id ) throws EventException
-    {
-        Event event = eventService.getEventById(id);
-        return new ResponseEntity<Event>(event,HttpStatus.OK);
+    public ResponseEntity updateEventById(@PathVariable("Id") Integer id ) throws EventException {
+        try{
+            Event event = eventService.getEventById(id);
+            return new ResponseEntity<Event>(event,HttpStatus.OK);
+        }catch (EventException ex) {
+            String errorMessage = "Error setting with update: " + ex.getMessage();
+            return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PutMapping("status/event/update/{id}")
@@ -66,18 +72,23 @@ public class EventController {
     public ResponseEntity<Object> updateEventById(@PathVariable Integer id,@RequestBody Event event) throws EventException {
         try {
             eventService.updateEventById(id, event);
-            return ResponseEntity.ok("event updated");
-        } catch (EventException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return new ResponseEntity<>("event updated", HttpStatus.OK);
+        } catch (EventException ex) {
+            String errorMessage = "Error setting: " + ex.getMessage();
+            return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @DeleteMapping("status/event/delete/{Id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Object> deleteEventById(@PathVariable ("Id") Integer id ) throws EventException
-    {
-        eventService.deleteEventById(id);
-        return new ResponseEntity<>("Event with this Id deleted",HttpStatus.OK);
+    public ResponseEntity<Object> deleteEventById(@PathVariable ("Id") Integer id ) throws EventException {
+        try {
+            eventService.deleteEventById(id);
+            return new ResponseEntity<>("Event with this Id deleted",HttpStatus.OK);
+        }catch (EventException ex) {
+            String errorMessage = "Error setting: " + ex.getMessage();
+            return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 }

@@ -38,24 +38,27 @@ public class SubmissionController {
 
     @PostMapping("event/{eventId}/upload")
     public void uploadFile(HttpServletRequest request, @PathVariable Integer eventId, @RequestParam("file") MultipartFile file) throws SubmissionException, UserException {
+        try {
+            String token = jwtService.extractBearerToken(request);
+            String email = jwtUtils.getEmailFromJwtToken(token);
+            User user = userService.isUserEmailPresent(email);
 
-        String token = jwtService.extractBearerToken(request);
-        String email = jwtUtils.getEmailFromJwtToken(token);
-        User user = userService.isUserEmailPresent(email);
-
-        if (user != null) {
-            Long userId = user.getUserId();
-            submissionService.saveSubmit(userId, eventId,file);
+            if (user != null) {
+                Long userId = user.getUserId();
+                submissionService.saveSubmit(userId, eventId,file);
+            }
+        }catch (SubmissionException ex){
+            String errorMessage = "Error: " + ex.getMessage();
+//            return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }
 
     @PostMapping("/event/{eventId}/uploads")
     public void uploadMultipleFiles(HttpServletRequest request, @PathVariable Integer eventId, @RequestParam("files") MultipartFile[] files) throws SubmissionException, UserException {
-            for (MultipartFile file : files) {
-                uploadFile(request, eventId, file);
-            }
-
+               for (MultipartFile file : files) {
+                   uploadFile(request, eventId, file);
+               }
     }
 
     @GetMapping("/download/{fileId}")

@@ -56,9 +56,8 @@ public class StatusServiceImpl implements StatusService {
 				status.setCategory(category);
 				return statusRepository.save(status);
 
-			}
-			else {
-				return null;
+			}else {
+				throw new StatusException("Category that you indicated doesn't exist! Category Id: " + categoryId);
 			}
 		}
 		else {
@@ -67,13 +66,13 @@ public class StatusServiceImpl implements StatusService {
 	}
 
 	@Override
-	public Status getStatusById(Integer PId) throws StatusException {
-		Optional<Status> opt= statusRepository.findById(PId);
+	public Status getStatusById(Integer id) throws StatusException {
+		Optional<Status> opt= statusRepository.findById(id);
 		if(opt.isPresent()) {
 			return opt.get();
 		}
 		else {
-			throw new StatusException("Status does not exist with Id :"+PId);
+			throw new StatusException("Status does not exist with Id : "+id);
 
 		}
 	}
@@ -126,7 +125,7 @@ public class StatusServiceImpl implements StatusService {
 			eventRepository.deleteByStatusId(id);
 			statusRepository.deleteByStatusId(id);
 		} else {
-			throw new StatusException("Status does not exist with Id :" + id);
+			throw new StatusException("Status does not exist with Id : " + id);
 		}
 			
 	}

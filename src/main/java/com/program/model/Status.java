@@ -68,7 +68,7 @@ public class Status {
 		this.category.setCategoryId(categoryId);
 	}
 
-	@JsonProperty
+	@JsonProperty("category_name")
 	public String getCategoryName(){
 		return category.getCategoryName();
 	}
