@@ -15,7 +15,10 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 
 @Service
@@ -53,15 +56,15 @@ public class SubmissionServiceImpl implements SubmissionService {
             if (teacherEvent!= null) {
                 teacherEvent.setSubmissionStatus(true);
                 teacherEventRepository.save(teacherEvent);
-            }
 
-            Submission submission = new Submission(fileName, file.getContentType(),file.getSize(), file.getBytes());
-            submissionRepository.save(submission);
+                Submission submission = new Submission(fileName, file.getContentType(),file.getSize(), file.getBytes());
+                submissionRepository.save(submission);
 
-            TeacherSubmissionId teacherSubmissionId = new TeacherSubmissionId(teacher.getTeacherId(),event.getEventId(),submission.getSubmissionId());
-            TeacherSubmission teacherSubmission = new TeacherSubmission(teacherSubmissionId,teacher,event,submission);
-            teacherSubmissionRepository.save(teacherSubmission);
-
+                TeacherSubmissionId teacherSubmissionId = new TeacherSubmissionId(teacher.getTeacherId(),event.getEventId(),submission.getSubmissionId());
+                TeacherSubmission teacherSubmission = new TeacherSubmission(teacherSubmissionId,teacher,event,submission);
+                teacherSubmissionRepository.save(teacherSubmission);
+            }else
+                throw new SubmissionException("This teacher had no events related to this id: " + eventId);
 
         } catch (IOException ex) {
             throw new SubmissionException("Could not store file " + fileName + ". Please try again!", ex);
@@ -74,6 +77,35 @@ public class SubmissionServiceImpl implements SubmissionService {
                 .findBySubmissionId(id);
 //                .orElseThrow(
 //                        () -> new Exception("File not found with Id: " + id));
+    }
+
+    @Override
+    public List<Submission> getSubmissions(Long teacherId, Integer eventId) throws SubmissionException {
+        List<TeacherSubmission> teacherSubmissionList = teacherSubmissionRepository.findTeacherSubmissionsById(teacherId,eventId);
+        if (!teacherSubmissionList.isEmpty()) {
+            List<Submission> submissions = new ArrayList<>();
+            for (TeacherSubmission teacherSubmission : teacherSubmissionList) {
+                Submission submission = submissionRepository.findBySubmissionId(teacherSubmission.getSubmissionId());
+                submissions.add(submission);
+            }
+            return submissions;
+        }else
+            throw new SubmissionException("This teacher doesn't have submissions or events");
+    }
+
+    @Override
+    public void deleteSubmission(Long userId,String submissionId) throws SubmissionException {
+        Optional<Submission> optionalSubmission = submissionRepository.findById(submissionId);
+        Teacher teacher = teacherRepository.findByUserId(userId);
+        if(optionalSubmission.isPresent()){
+            TeacherSubmission teacherSubmission = teacherSubmissionRepository.findTeacherBySubmissionId(teacher.getTeacherId(), submissionId);
+            if (teacherSubmission!=null) {
+                teacherSubmissionRepository.deleteBySubmissionId(submissionId);
+                submissionRepository.deleteBySubmissionId(submissionId);
+            }else
+                throw new SubmissionException("This user hasn't permission to delete other teacher's submission!");
+        }else
+            throw new SubmissionException("The file with id " + submissionId + " doesn't exist!" );
     }
 
 }

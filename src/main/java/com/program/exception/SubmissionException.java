@@ -8,6 +8,6 @@ public class SubmissionException extends Exception{
     }
 
     public SubmissionException(String message) {
-//        super(message);
+        super(message);
     }
 }

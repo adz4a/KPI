@@ -62,5 +62,10 @@ public class TeacherSubmission {
         return  submission.getFileType();
     }
 
+    @JsonProperty("size")
+    public long getFileSize(){
+        return  submission.getSize();
+    }
+
 
 }
