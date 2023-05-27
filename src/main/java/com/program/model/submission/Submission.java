@@ -21,19 +21,15 @@ public class Submission {
     private String fileType;
     private long size;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date submissionDate;
-
     @Lob
     private byte[] data;
 
 
-    public Submission(String fileName, String fileType, Long size, byte[] data, Date submissionDate) {
+    public Submission(String fileName, String fileType, Long size, byte[] data) {
         this.fileName = fileName;
         this.fileType = fileType;
         this.size = size;
         this.data = data;
-        this.submissionDate = submissionDate;
     }
 
     @JsonProperty("submission_id")
@@ -70,15 +66,6 @@ public class Submission {
 
     public void setSize(long size) {
         this.size = size;
-    }
-
-    @JsonProperty("submission_date")
-    public Date getSubmissionDate() {
-        return submissionDate;
-    }
-
-    public void setSubmissionDate(Date submissionDate) {
-        this.submissionDate = submissionDate;
     }
 
     @JsonIgnore

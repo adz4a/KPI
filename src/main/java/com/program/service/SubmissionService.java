@@ -9,13 +9,13 @@ import java.util.List;
 
 public interface SubmissionService {
 
-    void saveSubmit(Long userId, Integer eventId, MultipartFile multipartFile, Date submissionDate) throws SubmissionException;
+    void saveSubmit(Long userId, Integer eventId, MultipartFile multipartFile, Date modifyDate) throws SubmissionException;
 
     Submission getSubmission(String submissionId) throws Exception;
 
     List<Submission> getSubmissions(Long teacherId, Integer eventId) throws SubmissionException;
 
-    void deleteSubmission(Long userId,String submissionId) throws SubmissionException;
+    void deleteSubmission(Long userId,String submissionId, Date modifyDate) throws SubmissionException;
 
 
 }

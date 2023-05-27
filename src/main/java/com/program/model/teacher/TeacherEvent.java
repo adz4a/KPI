@@ -1,5 +1,6 @@
 package com.program.model.teacher;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.program.model.Event;
@@ -8,6 +9,7 @@ import com.program.model.role.ERole;
 import com.program.model.role.Role;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.Objects;
 
 
@@ -35,6 +37,9 @@ public class TeacherEvent {
     private Approve approve;
 
     private boolean submissionStatus;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date modifyDate;
 
     private String comment;
 
@@ -112,6 +117,16 @@ public class TeacherEvent {
     @JsonProperty("submission_status")
     public boolean isSubmissionStatus() {
         return submissionStatus;
+    }
+
+    @JsonProperty("modify_date")
+    @JsonFormat(pattern = "yyyy-mm-dd HH:mm")
+    public Date getModifyDate() {
+        return modifyDate;
+    }
+
+    public void setModifyDate(Date modifyDate) {
+        this.modifyDate = modifyDate;
     }
 
     @JsonProperty("comment")

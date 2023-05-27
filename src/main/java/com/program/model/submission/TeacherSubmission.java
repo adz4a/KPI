@@ -68,10 +68,6 @@ public class TeacherSubmission {
         return  submission.getSize();
     }
 
-    @JsonProperty("submission_date")
-    public Date getSubmissionDate() {
-        return submission.getSubmissionDate();
-    }
 
 
 }

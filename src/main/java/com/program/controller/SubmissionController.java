@@ -4,6 +4,7 @@ import com.program.exception.CategoryException;
 import com.program.exception.SubmissionException;
 import com.program.exception.UserException;
 import com.program.helper.jwt.JwtUtils;
+import com.program.helper.util.DateUtils;
 import com.program.model.User;
 import com.program.model.submission.Submission;
 import com.program.service.JwtService;
@@ -22,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 
 @RestController
@@ -48,11 +50,9 @@ public class SubmissionController {
             User user = userService.isUserEmailPresent(email);
             if (user != null) {
                 Long userId = user.getUserId();
-
+                Date modifyDate = DateUtils.getCurrentDate();
                 for (MultipartFile file : files) {
-                    Calendar calendar = Calendar.getInstance();
-                    Date submissionDate = calendar.getTime();
-                    submissionService.saveSubmit(userId, eventId, file, submissionDate);
+                    submissionService.saveSubmit(userId, eventId, file,modifyDate);
                 }
             }
             return new ResponseEntity<>("The file has been successfully uploaded!", HttpStatus.OK);
@@ -95,7 +95,8 @@ public class SubmissionController {
             User user = userService.isUserEmailPresent(email);
             if (user != null) {
                 Long userId = user.getUserId();
-            submissionService.deleteSubmission(userId,id);
+                Date modifyDate = DateUtils.getCurrentDate();
+            submissionService.deleteSubmission(userId,id,modifyDate);
             }
             return new ResponseEntity<>("The file with this id deleted", HttpStatus.OK);
         }catch (SubmissionException | UserException ex) {
