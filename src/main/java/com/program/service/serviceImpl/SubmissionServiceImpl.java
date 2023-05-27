@@ -15,10 +15,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 
 @Service
@@ -41,7 +38,7 @@ public class SubmissionServiceImpl implements SubmissionService {
 
 
     @Override
-    public void saveSubmit(Long userId,Integer eventId,MultipartFile file) throws SubmissionException {
+    public void saveSubmit(Long userId, Integer eventId, MultipartFile file, Date submissionDate) throws SubmissionException {
         String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
 
         try {
@@ -57,7 +54,7 @@ public class SubmissionServiceImpl implements SubmissionService {
                 teacherEvent.setSubmissionStatus(true);
                 teacherEventRepository.save(teacherEvent);
 
-                Submission submission = new Submission(fileName, file.getContentType(),file.getSize(), file.getBytes());
+                Submission submission = new Submission(fileName, file.getContentType(),file.getSize(), file.getBytes(), submissionDate);
                 submissionRepository.save(submission);
 
                 TeacherSubmissionId teacherSubmissionId = new TeacherSubmissionId(teacher.getTeacherId(),event.getEventId(),submission.getSubmissionId());
@@ -100,8 +97,14 @@ public class SubmissionServiceImpl implements SubmissionService {
         if(optionalSubmission.isPresent()){
             TeacherSubmission teacherSubmission = teacherSubmissionRepository.findTeacherBySubmissionId(teacher.getTeacherId(), submissionId);
             if (teacherSubmission!=null) {
+                TeacherEvent teacherEvent = teacherEventRepository.findEventAndTeacherId(teacher.getTeacherId(), teacherSubmission.getEventId());
                 teacherSubmissionRepository.deleteBySubmissionId(submissionId);
                 submissionRepository.deleteBySubmissionId(submissionId);
+                List<TeacherSubmission> teacherSubmissionList = teacherSubmissionRepository.findTeacherSubmissionsById(teacher.getTeacherId(),teacherSubmission.getEventId());
+                if (teacherSubmissionList.isEmpty()){
+                    teacherEvent.setSubmissionStatus(false);
+                    teacherEventRepository.save(teacherEvent);
+                }
             }else
                 throw new SubmissionException("This user hasn't permission to delete other teacher's submission!");
         }else

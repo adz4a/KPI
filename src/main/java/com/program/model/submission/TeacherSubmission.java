@@ -7,6 +7,7 @@ import com.program.model.teacher.Teacher;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Data
@@ -65,6 +66,11 @@ public class TeacherSubmission {
     @JsonProperty("size")
     public long getFileSize(){
         return  submission.getSize();
+    }
+
+    @JsonProperty("submission_date")
+    public Date getSubmissionDate() {
+        return submission.getSubmissionDate();
     }
 
 

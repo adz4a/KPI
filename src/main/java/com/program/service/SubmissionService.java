@@ -4,11 +4,12 @@ import com.program.exception.SubmissionException;
 import com.program.model.submission.Submission;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Date;
 import java.util.List;
 
 public interface SubmissionService {
 
-    void saveSubmit(Long userId,Integer eventId,MultipartFile multipartFile) throws SubmissionException;
+    void saveSubmit(Long userId, Integer eventId, MultipartFile multipartFile, Date submissionDate) throws SubmissionException;
 
     Submission getSubmission(String submissionId) throws Exception;
 

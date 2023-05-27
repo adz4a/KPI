@@ -19,6 +19,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 
@@ -46,8 +48,11 @@ public class SubmissionController {
             User user = userService.isUserEmailPresent(email);
             if (user != null) {
                 Long userId = user.getUserId();
+
                 for (MultipartFile file : files) {
-                    submissionService.saveSubmit(userId, eventId, file);
+                    Calendar calendar = Calendar.getInstance();
+                    Date submissionDate = calendar.getTime();
+                    submissionService.saveSubmit(userId, eventId, file, submissionDate);
                 }
             }
             return new ResponseEntity<>("The file has been successfully uploaded!", HttpStatus.OK);
@@ -92,7 +97,7 @@ public class SubmissionController {
                 Long userId = user.getUserId();
             submissionService.deleteSubmission(userId,id);
             }
-            return new ResponseEntity<>("Category with this id deleted", HttpStatus.OK);
+            return new ResponseEntity<>("The file with this id deleted", HttpStatus.OK);
         }catch (SubmissionException | UserException ex) {
             String errorMessage = "Error setting: " + ex.getMessage();
             return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
