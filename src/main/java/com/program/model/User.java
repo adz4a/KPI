@@ -12,6 +12,7 @@ import org.hibernate.validator.constraints.Length;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -27,9 +28,10 @@ public class User {
     @Column(name = "user_id")
     private Long userId;
 
-    @Email(message = "{user.email.not.valid}")
+
     @NotEmpty(message = "{user.email.not.empty}")
     @Column(unique = true)
+    @Email(regexp = "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,3}",flags = Pattern.Flag.CASE_INSENSITIVE, message = "Email is not valid")
     private String email;
     @NotEmpty(message = "{user.name.not.empty}")
     private String name;
@@ -123,12 +125,12 @@ public class User {
         this.roles = roles;
     }
 
-    public User(String email, String password) {
+
+    public User(String email, String name, String password) {
         this.email = email;
+        this.name = name;
         this.password = password;
     }
-
-
 
     @Override
     public boolean equals(Object o) {
@@ -147,14 +149,6 @@ public class User {
         return Objects.hash(userId, email, name, password, roles);
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "userId=" + userId +
-                ", email='" + email + '\'' +
-                ", name='" + name + '\'' +
-                ", password='" + password + '\'' +
-                ", roles=" + roles +
-                '}';
-    }
+
+
 }

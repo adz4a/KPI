@@ -28,6 +28,7 @@ public class Role {
         this.name = name;
     }
 
+    @JsonIgnore
     public Integer getRoleId() {
         return roleId;
     }

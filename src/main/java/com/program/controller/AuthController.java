@@ -1,14 +1,19 @@
 package com.program.controller;
 
 import com.program.detail.UserDetailsImpl;
+import com.program.exception.UserException;
 import com.program.helper.jwt.JwtUtils;
+import com.program.payload.request.RegisterRequest;
 import com.program.payload.response.JwtResponse;
 import com.program.payload.request.LoginRequest;
+import com.program.payload.response.MessageResponse;
 import com.program.repository.RoleRepository;
 import com.program.repository.UserRepository;
 import com.program.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -18,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -28,15 +34,13 @@ public class AuthController {
     @Autowired
     public UserService userService;
 
-
     @Autowired
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private PasswordEncoder encoder;
-
-    @Autowired
     private JwtUtils jwtUtils;
+
+
 
 
 
@@ -58,6 +62,27 @@ public class AuthController {
                 userDetails.getId(),
                 userDetails.getEmail(),
                 roles));
+
+    }
+
+    @PostMapping("/register")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest registerRequest) throws UserException {
+        try {
+            if (userService.existsByEmail(registerRequest.getEmail())) {
+                return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
+            }
+            if (Objects.equals(registerRequest.getPassword(), registerRequest.getConfirmPassword())) {
+                userService.registerUser(registerRequest);
+                return new ResponseEntity<>("User registered successfully!", HttpStatus.OK);
+            }else
+                return new ResponseEntity<>("The password doesn't match!", HttpStatus.OK);
+
+        }catch (UserException ex){
+            String errorMessage = "Error setting: " + ex.getMessage();
+            return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
 
     }
 

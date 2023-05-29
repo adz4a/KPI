@@ -17,6 +17,7 @@ public class Event {
 
     private String eventName;
     private Integer eventPercentage;
+    private String eventRates;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "statusId")
@@ -56,6 +57,15 @@ public class Event {
 
     public void setEventPercentage(Integer eventPercentage) {
         this.eventPercentage = eventPercentage;
+    }
+
+    @JsonProperty("event_rates")
+    public String getEventRates() {
+        return eventRates;
+    }
+
+    public void setEventRates(String eventRates) {
+        this.eventRates = eventRates;
     }
 
     public void setTeacherEvents(List<TeacherEvent> teacherEvents) {

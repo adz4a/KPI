@@ -2,12 +2,16 @@ package com.program.service.serviceImpl;
 
 
 import com.program.exception.UserException;
+import com.program.model.role.ERole;
 import com.program.model.role.Role;
 import com.program.model.User;
+import com.program.payload.request.AssignRequest;
+import com.program.payload.request.RegisterRequest;
 import com.program.repository.RoleRepository;
 import com.program.repository.UserRepository;
 import com.program.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -28,6 +32,9 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
     }
+
+    @Autowired
+    private PasswordEncoder encoder;
 
 
     @Override
@@ -65,11 +72,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public User isUserEmailPresent(String email) throws UserException {
         if(userRepository.findByEmail(email) != null){
-            User user = userRepository.findByEmail(email);
-            return user;
+            return userRepository.findByEmail(email);
         }
         else
             throw new UserException("This user email doesn't exist!");
+    }
+
+    @Override
+    public Boolean existsByEmail(String email) throws UserException {
+        User user = userRepository.findByEmail(email);
+        return user != null;
+
     }
 
     @Override
@@ -86,8 +99,45 @@ public class UserServiceImpl implements UserService {
         {
             return userRepository.save(user);
         }else {
-            throw new UserException("Category with given id is not present........");
+            throw new UserException("User with given id is not present........");
         }
+    }
+
+    @Override
+    public void registerUser(RegisterRequest registerRequest) throws UserException {
+        User user = new User(registerRequest.getEmail(),
+                registerRequest.getUsername(),
+                encoder.encode(registerRequest.getPassword()));
+
+        Set<String> strRoles = registerRequest.getRole();
+        Set<Role> roles = new HashSet<>();
+
+        if (strRoles == null) {
+            throw new UserException("Role is not found! Please indicate role!");
+        } else {
+            strRoles.forEach(role -> {
+                switch (role) {
+                    case "Admin" -> {
+                        Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                        roles.add(adminRole);
+                    }
+                    case "Observer" -> {
+                        Role modRole = roleRepository.findByName(ERole.ROLE_OBSERVER)
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                        roles.add(modRole);
+                    }
+                    case "Teacher" -> {
+                        Role userRole = roleRepository.findByName(ERole.ROLE_TEACHER)
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                        roles.add(userRole);
+                    }
+                }
+            });
+        }
+
+        user.setRoles(roles);
+        userRepository.save(user);
     }
 
     @Override
@@ -95,5 +145,6 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.getOne(id);
         userRepository.delete(user);
     }
+
 
 }

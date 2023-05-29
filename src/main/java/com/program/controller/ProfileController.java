@@ -45,15 +45,10 @@ public class ProfileController {
         String email = jwtUtils.getEmailFromJwtToken(token);
         User user = userService.isUserEmailPresent(email);
         if (user != null) {
-            if (user.isAdmin() || user.isObserver()){
-                return new ResponseEntity<User>(user, HttpStatus.OK);
-            }
-            else {
                 Long id = user.getUserId();
                 Teacher teacher = teacherService.getTeacherByUserId(id);
                 return new ResponseEntity<Teacher>(teacher, HttpStatus.OK);
             }
-        }
 
         return new ResponseEntity<>("Bad credentials", HttpStatus.UNAUTHORIZED);
 

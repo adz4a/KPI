@@ -21,6 +21,9 @@ public interface StatusRepository extends  JpaRepository<Status, Integer> {
 	@Query("SELECT s FROM Status s WHERE s.statusId = :statusId")
 	Status findByStatusId(Integer statusId);
 
+	@Query("SELECT s FROM Status s WHERE s.statusName = :statusName AND s.category.categoryId = :categoryId")
+	Status findByStatusNameAndCategoryId(String statusName, Integer categoryId);
+
 	@Query("SELECT s FROM Status s WHERE s.statusId = :statusId")
 	List<Status> findByStatusesId(Integer statusId);
 

@@ -27,7 +27,7 @@ public class Teacher {
     private String statusName;
 
     @Column(columnDefinition = "integer default 0")
-    private Integer KpiSum;
+    private Integer kpiSum;
 
     @OneToMany(mappedBy = "teacher")
     private List<TeacherEvent> teacherEvents;
@@ -39,6 +39,11 @@ public class Teacher {
     @JoinColumn(name = "departmentId")
     @JsonIgnore
     private Department department;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "teacherRateId")
+    @JsonIgnore
+    private TeacherRate teacherRate;
 
     @JsonProperty("teacher_id")
     public Long getTeacherId() {
@@ -101,13 +106,27 @@ public class Teacher {
         this.department = department;
     }
 
+    @JsonProperty("teacher_rate")
+    public String getTeacherRate() {
+        return teacherRate.getTeacherRateName();
+    }
+
+    @JsonIgnore
+    public Integer getTeacherRateId(){
+        return teacherRate.getTeacherRateId();
+    }
+
+    public void setTeacherRate(TeacherRate teacherRate) {
+        this.teacherRate = teacherRate;
+    }
+
     @JsonProperty("kpi_sum")
     public Integer getKpiSum(){
-        return KpiSum;
+        return kpiSum;
     }
 
     public void setKpiSum(Integer kpiSum) {
-        KpiSum = kpiSum;
+        this.kpiSum = kpiSum;
     }
 
     @JsonProperty("teacher_events")
@@ -132,5 +151,9 @@ public class Teacher {
         super();
     }
 
+    public Teacher(User user, Integer kpiSum) {
+        this.user = user;
+        this.kpiSum = kpiSum;
 
+    }
 }

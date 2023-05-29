@@ -13,4 +13,7 @@ public interface DepartmentRepository extends JpaRepository<Department,Integer> 
     @Query("SELECT d FROM Department d WHERE d.departmentId = :departmentId")
     Department findByDepartmentId(Integer departmentId);
 
+    @Query("SELECT d FROM Department d WHERE d.departmentName = :departmentName")
+    Department findByDepartmentName(String departmentName);
+
 }

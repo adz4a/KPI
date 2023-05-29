@@ -5,8 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.program.model.Event;
 import com.program.model.approve.Approve;
-import com.program.model.role.ERole;
-import com.program.model.role.Role;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -32,26 +30,36 @@ public class TeacherEvent {
     private Event event;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "approveId")
+    @JoinColumn(name = "approveId", columnDefinition = "integer default 1")
     @JsonIgnore
     private Approve approve;
 
     private boolean submissionStatus;
+    private String eventRate;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date modifyDate;
 
     private String comment;
 
+    public TeacherEvent() {
+        super();
+    }
+
+    public TeacherEvent(TeacherEventId id, Teacher teacher, Event event,Approve approve) {
+        this.id = id;
+        this.teacher = teacher;
+        this.event = event;
+        this.approve = approve;
+    }
 
     @JsonIgnore
-//    @JsonProperty("teacher_id")
     public Long getTeacherId(){
         return teacher.getTeacherId();
     }
 
     @JsonProperty("teacher_name")
-    public String getTeacherName() {
+    public String getTeacherName(){
         return teacher.getUserName();
     }
 
@@ -81,6 +89,15 @@ public class TeacherEvent {
 
     public void setEvent(Event event) {
         this.event = event;
+    }
+
+    @JsonProperty("event_rate")
+    public String getEventRate() {
+        return eventRate;
+    }
+
+    public void setEventRate(String eventRate) {
+        this.eventRate = eventRate;
     }
 
     @JsonProperty("approve_name")
@@ -136,6 +153,11 @@ public class TeacherEvent {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    @JsonIgnore
+    public String getEventRates(){
+        return event.getEventRates();
     }
 
     public void setSubmissionStatus(boolean submissionStatus) {

@@ -4,6 +4,7 @@ import com.program.model.teacher.Teacher;
 import com.program.model.teacher.TeacherEvent;
 import com.program.model.teacher.TeacherEventId;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,9 +22,16 @@ public interface TeacherEventRepository extends JpaRepository<TeacherEvent, Teac
     List<TeacherEvent> findByTeacherId(Long teacherId);
 
     @Query("SELECT t FROM TeacherEvent t WHERE t.teacher.teacherId = :teacherId")
+    List<TeacherEvent> findEventsByTeacherId(Long teacherId);
+
+    @Query("SELECT t FROM TeacherEvent t WHERE t.teacher.teacherId = :teacherId")
     TeacherEvent findTeacherById(Long teacherId);
 
     @Query("SELECT t FROM TeacherEvent t WHERE t.teacher.teacherId = :teacherId AND t.event.eventId =:eventId")
     TeacherEvent findEventAndTeacherId(Long teacherId,Integer eventId);
+
+    @Modifying
+    @Query("DELETE FROM TeacherEvent t WHERE t.teacher.teacherId = :teacherId")
+    void deleteByTeacherAndEventId(Long teacherId);
 
 }
