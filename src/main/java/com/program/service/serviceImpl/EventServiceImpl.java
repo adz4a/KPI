@@ -105,15 +105,12 @@ public class EventServiceImpl implements EventService {
             throw new EventException("Event with ID " + id + " does not exist.");
         }
         Event existingEvent = optionalEvent.get();
-//		Setter
-        existingEvent.setEventName(event.getEventName());
-        existingEvent.setEventPercentage(event.getEventPercentage());
 
-        if (!Objects.equals(existingEvent.getEventRates(), event.getEventRates())){
-            List<TeacherEvent> teacherEventList = teacherEventRepository.findTeachersByEventId(id);
-            if (!teacherEventList.isEmpty()) {
-                for (TeacherEvent teacherEvent : teacherEventList) {
-                    Teacher teacher = teacherRepository.findByTeacherId(teacherEvent.getTeacherId());
+        List<TeacherEvent> teacherEventList = teacherEventRepository.findTeachersByEventId(id);
+        if (!teacherEventList.isEmpty()) {
+            for (TeacherEvent teacherEvent : teacherEventList) {
+                Teacher teacher = teacherRepository.findByTeacherId(teacherEvent.getTeacherId());
+                if (!Objects.equals(existingEvent.getEventRates(), event.getEventRates())) {
                     String rateInput = event.getEventRates();
                     boolean hasSlash = rateInput.contains("/");
                     if (hasSlash) {
@@ -125,9 +122,21 @@ public class EventServiceImpl implements EventService {
                     }
                     teacherEventRepository.save(teacherEvent);
                 }
+
+                if (!Objects.equals(existingEvent.getEventPercentage(), event.getEventPercentage())) {
+                    if (teacherEvent.isAccept()) {
+                        Integer percent = existingEvent.getEventPercentage() - event.getEventPercentage();
+                        Integer sum = teacher.getKpiSum() - percent;
+                        teacher.setKpiSum(sum);
+                        teacherRepository.save(teacher);
+                    }
+                }
             }
         }
 
+//      Setter
+        existingEvent.setEventName(event.getEventName());
+        existingEvent.setEventPercentage(event.getEventPercentage());
         existingEvent.setEventRates(event.getEventRates());
 
         eventRepository.save(existingEvent);

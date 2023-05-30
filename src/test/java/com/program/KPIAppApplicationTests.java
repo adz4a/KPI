@@ -40,19 +40,6 @@ class KPIAppApplicationTests {
 
 	@Test
 	void newTest(){
-		String input = "1/0.5/0,25";
-		boolean hasSlash = input.contains("/");
-		if (hasSlash) {
-			String[] parts = input.split("/");
-			String numberBeforeSlash = parts[2];
-			System.out.println(numberBeforeSlash);
-		} else {
-			System.out.println(input);
-		}
-
-//		int result = Integer.parseInt(numberBeforeSlash);
-//		System.out.println(result);
-
 	}
 
 
