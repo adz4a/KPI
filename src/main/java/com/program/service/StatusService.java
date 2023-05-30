@@ -1,6 +1,8 @@
 package com.program.service;
 
 import java.util.List;
+
+import com.program.exception.EventException;
 import com.program.model.Status;
 import com.program.exception.StatusException;
 
@@ -15,6 +17,6 @@ public interface StatusService {
 
 	  void updateStatusById(Integer id, Status status) throws StatusException;
 
-	  void deleteStatusById(Integer Id) throws StatusException;
+	  void deleteStatusById(Integer Id) throws StatusException, EventException;
 
 }

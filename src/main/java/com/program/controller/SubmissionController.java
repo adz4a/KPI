@@ -1,6 +1,5 @@
 package com.program.controller;
 
-import com.program.exception.CategoryException;
 import com.program.exception.SubmissionException;
 import com.program.exception.UserException;
 import com.program.helper.jwt.JwtUtils;
@@ -18,12 +17,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-
 import javax.servlet.http.HttpServletRequest;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
+
 
 
 @RestController
@@ -43,7 +40,7 @@ public class SubmissionController {
 
     @PostMapping("/event/{eventId}/uploads")
     @PreAuthorize("hasRole('TEACHER')")
-    public ResponseEntity uploadMultipleFiles(HttpServletRequest request, @PathVariable Integer eventId, @RequestParam("files") MultipartFile[] files) throws SubmissionException, UserException {
+    public ResponseEntity uploadMultipleFiles(HttpServletRequest request, @PathVariable Integer eventId, @RequestParam("files") MultipartFile[] files) {
         try {
             String token = jwtService.extractBearerToken(request);
             String email = jwtUtils.getEmailFromJwtToken(token);
@@ -75,8 +72,8 @@ public class SubmissionController {
                 .body(new ByteArrayResource(submission.getData()));
     }
 
-    @GetMapping("teacher/{teacherId}/event/event/{eventId}/submissions")
-    public ResponseEntity getFile(@PathVariable("teacherId") Long teacherId, @PathVariable("eventId") Integer eventId) throws SubmissionException {
+    @GetMapping("teacher/{teacherId}/event/{eventId}/submissions")
+    public ResponseEntity getFile(@PathVariable("teacherId") Long teacherId, @PathVariable("eventId") Integer eventId){
         try {
             List<Submission> submissions = submissionService.getSubmissions(teacherId, eventId);
             return new ResponseEntity<>(submissions,HttpStatus.OK);
@@ -88,7 +85,7 @@ public class SubmissionController {
 
     @DeleteMapping("/submission/delete/{Id}")
     @PreAuthorize("hasRole('TEACHER')")
-    public ResponseEntity<Object> deleteCategoryById(HttpServletRequest request,@PathVariable ("Id") String id) throws SubmissionException, UserException  {
+    public ResponseEntity<Object> deleteCategoryById(HttpServletRequest request,@PathVariable ("Id") String id) {
         try {
             String token = jwtService.extractBearerToken(request);
             String email = jwtUtils.getEmailFromJwtToken(token);

@@ -2,6 +2,8 @@ package com.program.controller;
 
 import java.util.List;
 
+import com.program.exception.EventException;
+import com.program.exception.StatusException;
 import com.program.exception.TeacherEventException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,15 +42,19 @@ public class CategoryController {
 
 		@PostMapping("/category/add")
 		@PreAuthorize("hasRole('ADMIN')")
-		public ResponseEntity<Category> addNewCategory (@RequestBody Category category) throws CategoryException {
-			Category category1 = categoryservice.addNewCategory(category);
-			System.out.println(category);
-			return new ResponseEntity<Category>(category1, HttpStatus.OK);
+		public ResponseEntity addNewCategory (@RequestBody Category category){
+			try {
+				Category category1 = categoryservice.addNewCategory(category);
+				return new ResponseEntity<Category>(category1, HttpStatus.OK);
+			}catch (CategoryException ex){
+				String errorMessage = "Error setting: " + ex.getMessage();
+				return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
+			}
 		}
 
 		@GetMapping("/category/getById/{Id}")
 		@PreAuthorize("hasRole('ADMIN') or hasRole('OBSERVER')")
-		public ResponseEntity getCategoryById(@PathVariable ("Id") Integer id ) throws CategoryException{
+		public ResponseEntity getCategoryById(@PathVariable ("Id") Integer id ){
 			try {
 				Category category1 = categoryservice.getCategoryById(id);
 				return new ResponseEntity<Category>(category1, HttpStatus.OK);
@@ -60,7 +66,7 @@ public class CategoryController {
 
 		@GetMapping("/category/update/{Id}")
 		@PreAuthorize("hasRole('ADMIN')")
-		public ResponseEntity updateCategoryById(@PathVariable ("Id") Integer id ) throws CategoryException{
+		public ResponseEntity updateCategoryById(@PathVariable ("Id") Integer id ){
 			try {
 				Category categoryUpdate =categoryservice.getCategoryById(id);
 				return new ResponseEntity<Category>(categoryUpdate,HttpStatus.OK);
@@ -73,7 +79,7 @@ public class CategoryController {
 
 		@PutMapping("/category/update/{id}")
 		@PreAuthorize("hasRole('ADMIN')")
-		public ResponseEntity updateCategoryById(@PathVariable Integer id,@RequestBody Category category) throws CategoryException{
+		public ResponseEntity updateCategoryById(@PathVariable Integer id,@RequestBody Category category){
 			try {
 				categoryservice.updateCategoryById(id, category);
 				return new ResponseEntity<>("Category by Id " + id + " updated" ,HttpStatus.OK);
@@ -85,11 +91,11 @@ public class CategoryController {
 
 		@DeleteMapping("/category/delete/{Id}")
 		@PreAuthorize("hasRole('ADMIN')")
-		public ResponseEntity<Object> deleteCategoryById(@PathVariable ("Id") Integer id) throws CategoryException{
+		public ResponseEntity<Object> deleteCategoryById(@PathVariable ("Id") Integer id){
 			try {
 				categoryservice.deleteCategoryById(id);
 				return new ResponseEntity<>("Category with this id deleted", HttpStatus.OK);
-			}catch (CategoryException ex) {
+			}catch (CategoryException | StatusException | EventException ex) {
 				String errorMessage = "Error setting: " + ex.getMessage();
 				return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
 			}

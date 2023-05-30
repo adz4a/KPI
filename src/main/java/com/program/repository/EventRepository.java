@@ -25,10 +25,6 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
     void resetStatusByStatusId(Integer statusId);
 
     @Modifying
-    @Query("DELETE FROM Event e WHERE e.status.statusId = :statusId")
-    void deleteByStatusId(Integer statusId);
-
-    @Modifying
     @Query("DELETE FROM Event e WHERE e.eventId = :eventId")
     void deleteByEventId(Integer eventId);
 

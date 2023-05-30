@@ -17,11 +17,18 @@ public interface TeacherSubmissionRepository extends JpaRepository<TeacherSubmis
     @Query("SELECT t FROM TeacherSubmission t WHERE t.teacher.teacherId =:teacherId AND t.event.eventId =:eventId")
     List<TeacherSubmission> findTeacherSubmissionsById(Long teacherId,Integer eventId);
 
+    @Query("SELECT t FROM TeacherSubmission t WHERE t.event.eventId =:eventId")
+    List<TeacherSubmission> findByEventId(Integer eventId);
+
     @Query("SELECT t FROM TeacherSubmission t WHERE t.teacher.teacherId =:teacherId AND t.submission.submissionId =:submissionId")
     TeacherSubmission findTeacherBySubmissionId(Long teacherId,String submissionId);
 
     @Modifying
     @Query("DELETE FROM TeacherSubmission t WHERE t.submission.submissionId = :submissionId")
     void deleteBySubmissionId(String submissionId);
+
+    @Modifying
+    @Query("DELETE FROM TeacherSubmission t WHERE t.event.eventId = :eventId")
+    void deleteByEventId(Integer eventId);
 
 }

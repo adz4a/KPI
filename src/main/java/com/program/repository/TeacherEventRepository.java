@@ -18,9 +18,6 @@ public interface TeacherEventRepository extends JpaRepository<TeacherEvent, Teac
     @Query("SELECT t FROM TeacherEvent t WHERE t.event.eventId = :eventId")
     List<TeacherEvent> findTeachersByEventId(Integer eventId);
 
-    @Query("SELECT t.teacher.teacherId FROM TeacherEvent t WHERE t.teacher.teacherId = :teacherId")
-    List<TeacherEvent> findByTeacherId(Long teacherId);
-
     @Query("SELECT t FROM TeacherEvent t WHERE t.teacher.teacherId = :teacherId")
     List<TeacherEvent> findEventsByTeacherId(Long teacherId);
 
@@ -33,5 +30,9 @@ public interface TeacherEventRepository extends JpaRepository<TeacherEvent, Teac
     @Modifying
     @Query("DELETE FROM TeacherEvent t WHERE t.teacher.teacherId = :teacherId")
     void deleteByTeacherAndEventId(Long teacherId);
+
+    @Modifying
+    @Query("DELETE FROM TeacherEvent t WHERE t.event.eventId = :eventId")
+    void deleteByEventId(Integer eventId);
 
 }

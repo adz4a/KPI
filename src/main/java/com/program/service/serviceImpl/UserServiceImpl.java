@@ -105,6 +105,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void registerUser(RegisterRequest registerRequest) throws UserException {
+
         User user = new User(registerRequest.getEmail(),
                 registerRequest.getUsername(),
                 encoder.encode(registerRequest.getPassword()));

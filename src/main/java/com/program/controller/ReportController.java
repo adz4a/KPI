@@ -22,7 +22,7 @@ public class ReportController {
     public ReportService reportService;
 
     @GetMapping(value = "/report", produces = MediaType.APPLICATION_PDF_VALUE)
-    public ResponseEntity generatePdf() throws IOException, ReportException {
+    public ResponseEntity generatePdf() {
         try {
             byte[] pdfBytes = reportService.generatePdf();
             HttpHeaders headers = new HttpHeaders();

@@ -30,7 +30,7 @@ public class TeacherController {
     }
 
     @GetMapping("/teacher/getById/{Id}")
-    public ResponseEntity getTeacherById(@PathVariable("Id") Long id ) throws TeacherException{
+    public ResponseEntity getTeacherById(@PathVariable("Id") Long id ){
         try {
             Teacher teacher = teacherService.getTeacherById(id);
             return new ResponseEntity<Teacher>(teacher,HttpStatus.OK);

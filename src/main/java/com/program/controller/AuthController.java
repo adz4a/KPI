@@ -67,7 +67,7 @@ public class AuthController {
 
     @PostMapping("/register")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest registerRequest) throws UserException {
+    public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
         try {
             if (userService.existsByEmail(registerRequest.getEmail())) {
                 return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));

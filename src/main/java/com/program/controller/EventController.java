@@ -33,7 +33,7 @@ public class EventController {
 
     @PostMapping("status/{Id}/event/add")
     @PreAuthorize("hasRole('ADMIN')")
-    public HttpEntity<? extends Object> addNewEvent(@PathVariable("Id") Integer id, @RequestBody Event event) throws EventException {
+    public HttpEntity<? extends Object> addNewEvent(@PathVariable("Id") Integer id, @RequestBody Event event) {
         try{
             Event newEvent = eventService.addNewEvent(id,event);
             return new ResponseEntity<Event>(newEvent, HttpStatus.OK);
@@ -43,9 +43,9 @@ public class EventController {
         }
     }
 
-    @GetMapping("status/event/getById/{Id}")
+    @GetMapping("event/getById/{Id}")
     @PreAuthorize("hasRole('ADMIN') or hasRole('OBSERVER')")
-    public ResponseEntity getEventById(@PathVariable("Id") Integer id ) throws EventException {
+    public ResponseEntity getEventById(@PathVariable("Id") Integer id ) {
         try {
             Event event = eventService.getEventById(id);
             return new ResponseEntity<Event>(event,HttpStatus.OK);
@@ -55,9 +55,9 @@ public class EventController {
         }
     }
 
-    @GetMapping("status/event/update/{Id}")
+    @GetMapping("event/update/{Id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity updateEventById(@PathVariable("Id") Integer id ) throws EventException {
+    public ResponseEntity updateEventById(@PathVariable("Id") Integer id ){
         try{
             Event event = eventService.getEventById(id);
             return new ResponseEntity<Event>(event,HttpStatus.OK);
@@ -67,9 +67,9 @@ public class EventController {
         }
     }
 
-    @PutMapping("status/event/update/{id}")
+    @PutMapping("event/update/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Object> updateEventById(@PathVariable Integer id,@RequestBody Event event) throws EventException {
+    public ResponseEntity<Object> updateEventById(@PathVariable Integer id,@RequestBody Event event) {
         try {
             eventService.updateEventById(id, event);
             return new ResponseEntity<>("event updated", HttpStatus.OK);
@@ -79,9 +79,9 @@ public class EventController {
         }
     }
 
-    @DeleteMapping("status/event/delete/{Id}")
+    @DeleteMapping("event/delete/{Id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Object> deleteEventById(@PathVariable ("Id") Integer id ) throws EventException {
+    public ResponseEntity<Object> deleteEventById(@PathVariable ("Id") Integer id ) {
         try {
             eventService.deleteEventById(id);
             return new ResponseEntity<>("Event with this Id deleted",HttpStatus.OK);

@@ -25,7 +25,7 @@ public class DepartmentController {
     }
 
     @GetMapping("/department/getById/{Id}")
-    public ResponseEntity getTeacherById(@PathVariable("Id") Integer id ) throws DepartmentException{
+    public ResponseEntity getTeacherById(@PathVariable("Id") Integer id ){
         try {
             Department department = departmentService.getDepartmentById(id);
             return new ResponseEntity<Department>(department,HttpStatus.OK);

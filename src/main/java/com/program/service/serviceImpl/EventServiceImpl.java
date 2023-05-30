@@ -3,14 +3,18 @@ package com.program.service.serviceImpl;
 import com.program.model.Event;
 import com.program.exception.EventException;
 import com.program.model.Status;
-import com.program.repository.EventRepository;
-import com.program.repository.StatusRepository;
+import com.program.model.approve.Approve;
+import com.program.model.submission.Submission;
+import com.program.model.submission.TeacherSubmission;
+import com.program.model.teacher.Teacher;
+import com.program.model.teacher.TeacherEvent;
+import com.program.model.teacher.TeacherEventId;
+import com.program.repository.*;
 import com.program.service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class EventServiceImpl implements EventService {
@@ -20,6 +24,21 @@ public class EventServiceImpl implements EventService {
 
     @Autowired
     private StatusRepository statusRepository;
+
+    @Autowired
+    private TeacherEventRepository teacherEventRepository;
+
+    @Autowired
+    private TeacherRepository teacherRepository;
+
+    @Autowired
+    private TeacherSubmissionRepository teacherSubmissionRepository;
+
+    @Autowired
+    private SubmissionRepository submissionRepository;
+
+    @Autowired
+    private ApproveRepository approveRepository;
 
     @Override
     public List<Event> getAllEvents() throws EventException {
@@ -33,7 +52,24 @@ public class EventServiceImpl implements EventService {
 
             if (status != null) {
                 event.setStatus(status);
-                return eventRepository.save(event);
+                eventRepository.save(event);
+                List<Teacher> teacherList = teacherRepository.findByCategoryAndStatusName(status.getCategoryName(),status.getStatusName());
+                for (Teacher teacher : teacherList) {
+                    TeacherEventId teacherEventId = new TeacherEventId(teacher.getTeacherId(), event.getEventId());
+                    Approve approve = approveRepository.findApproveByName("none");
+                    TeacherEvent teacherEvent = new TeacherEvent(teacherEventId, teacher, event, approve);
+
+                    String input = event.getEventRates();
+                    boolean hasSlash = input.contains("/");
+                    if (hasSlash) {
+                        String[] parts = input.split("/");
+                        String numberBeforeSlash = parts[teacher.getTeacherRateId() - 1];
+                        teacherEvent.setEventRate(numberBeforeSlash);
+                    } else {
+                        teacherEvent.setEventRate(input);
+                    }
+                    teacherEventRepository.save(teacherEvent);
+                }
             }
             else {
                 throw new EventException("Status that you indicated doesn't exist! Status Id: " + statusId);
@@ -42,6 +78,7 @@ public class EventServiceImpl implements EventService {
         else {
             throw new EventException("Category details is Empty...");
         }
+        return event;
     }
 
     @Override
@@ -49,6 +86,7 @@ public class EventServiceImpl implements EventService {
         Optional<Event> opt= eventRepository.findById(eventId);
         if(opt.isPresent()) {
             return opt.get();
+
         }
         else {
             throw new EventException("Event does not exist with Id : "+eventId);
@@ -71,13 +109,26 @@ public class EventServiceImpl implements EventService {
         existingEvent.setEventName(event.getEventName());
         existingEvent.setEventPercentage(event.getEventPercentage());
 
-//        Status status = statusRepository.;
-//        if (status != null) {
-//            existingEvent.setStatus(status);
-//            existingEvent.setEventPercentage(event.getEventPercentage());
-//        } else {
-//            throw new EventException("Category with this name or Status with this name doesn't exist!");
-//        }
+        if (!Objects.equals(existingEvent.getEventRates(), event.getEventRates())){
+            List<TeacherEvent> teacherEventList = teacherEventRepository.findTeachersByEventId(id);
+            if (!teacherEventList.isEmpty()) {
+                for (TeacherEvent teacherEvent : teacherEventList) {
+                    Teacher teacher = teacherRepository.findByTeacherId(teacherEvent.getTeacherId());
+                    String rateInput = event.getEventRates();
+                    boolean hasSlash = rateInput.contains("/");
+                    if (hasSlash) {
+                        String[] parts = rateInput.split("/");
+                        String numberBeforeSlash = parts[teacher.getTeacherRateId() - 1];
+                        teacherEvent.setEventRate(numberBeforeSlash);
+                    } else {
+                        teacherEvent.setEventRate(rateInput);
+                    }
+                    teacherEventRepository.save(teacherEvent);
+                }
+            }
+        }
+
+        existingEvent.setEventRates(event.getEventRates());
 
         eventRepository.save(existingEvent);
     }
@@ -86,6 +137,32 @@ public class EventServiceImpl implements EventService {
     public void deleteEventById(Integer id) throws EventException {
         Optional<Event> opt= eventRepository.findById(id);
         if(opt.isPresent()) {
+
+            List<TeacherEvent> teacherEventList = teacherEventRepository.findTeachersByEventId(id);
+            if (!teacherEventList.isEmpty()){
+                for (TeacherEvent teacherEvent : teacherEventList) {
+                    if (teacherEvent.isAccept()){
+                        Teacher teacher = teacherRepository.findByTeacherId(teacherEvent.getTeacherId());
+                        Integer sum = teacher.getKpiSum() - teacherEvent.getEventPercentage();
+                        teacher.setKpiSum(sum);
+                        teacherRepository.save(teacher);
+                    }
+                }
+            }
+
+            List<TeacherSubmission> teacherSubmissionList = teacherSubmissionRepository.findByEventId(id);
+            if (!teacherSubmissionList.isEmpty()){
+                List<Submission> submissionList = new ArrayList<>();
+                for (TeacherSubmission teacherSubmission : teacherSubmissionList){
+                    submissionList.add(submissionRepository.findBySubmissionId(teacherSubmission.getSubmissionId()));
+                }
+                teacherSubmissionRepository.deleteByEventId(id);
+                for (Submission submission : submissionList){
+                    submissionRepository.deleteBySubmissionId(submission.getSubmissionId());
+                }
+            }
+
+            teacherEventRepository.deleteByEventId(id);
             eventRepository.deleteByEventId(id);
         }
         else {

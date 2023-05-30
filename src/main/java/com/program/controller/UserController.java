@@ -17,22 +17,6 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody User newUser) throws UserException {
-        try {
-            User user = userService.getUserByEmail(newUser.getEmail());
-            if (user != null) {
-                return new ResponseEntity<>("User already exists.", HttpStatus.BAD_REQUEST);
-            }
-            userService.createUser(newUser);
-            return new ResponseEntity<>("Created user successfully, please login.", HttpStatus.OK);
-        }catch (UserException ex){
-            String errorMessage = "Error: " + ex.getMessage();
-            return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-    }
-
     @GetMapping("/users")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<User>> getAllUsers() throws UserException {
@@ -42,7 +26,7 @@ public class UserController {
 
     @GetMapping("/user/getById/{Id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity getUserById(@PathVariable("Id") Long id ) throws UserException {
+    public ResponseEntity getUserById(@PathVariable("Id") Long id ) {
         try {
             User user1 = userService.getUserById(id);
             return new ResponseEntity<User>(user1,HttpStatus.OK);
@@ -54,7 +38,7 @@ public class UserController {
 
     @PostMapping("/user/update/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity updateUserById( @PathVariable Long id, @RequestBody User user) throws UserException{
+    public ResponseEntity updateUserById( @PathVariable Long id, @RequestBody User user){
         try {
             User user1=	userService.updateUser(id,user);
             return new ResponseEntity<User>(user1,HttpStatus.OK);

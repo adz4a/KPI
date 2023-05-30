@@ -2,8 +2,6 @@ package com.program.controller;
 
 
 import com.program.exception.AssignException;
-import com.program.exception.EventException;
-import com.program.model.Event;
 import com.program.payload.request.AssignRequest;
 import com.program.service.AssignService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-public class AssignEventsController {
+public class AssignController {
 
     @Autowired
     public AssignService assignService;

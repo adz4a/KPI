@@ -51,68 +51,71 @@ public class AssignServiceImpl implements AssignService {
     public void assignTeacherEvents(AssignRequest assignRequest) throws AssignException {
         User user = userRepository.findByEmail(assignRequest.getEmail());
         if (user!=null){
-            Teacher teacher = teacherRepository.findByUserId(user.getUserId());
-            if (teacher==null){
-                teacher = new Teacher(user,0);
-            }
+            if (user.isTeacher()) {
+                Teacher teacher = teacherRepository.findByUserId(user.getUserId());
+                if (teacher == null) {
+                    teacher = new Teacher(user, 0);
+                }
 
-            if (Objects.equals(assignRequest.getCategoryName(), teacher.getCategoryName())
-                    && Objects.equals(assignRequest.getStatusName(), teacher.getStatusName())
-                    &&Objects.equals(assignRequest.getDepartmentName(), teacher.getDepartmentName())
-                    &&Objects.equals(assignRequest.getRateName(), teacher.getTeacherRate())){
-                throw new AssignException("This teacher already has assigned events!");
-            }
+                if (Objects.equals(assignRequest.getCategoryName(), teacher.getCategoryName())
+                        && Objects.equals(assignRequest.getStatusName(), teacher.getStatusName())
+                        && Objects.equals(assignRequest.getDepartmentName(), teacher.getDepartmentName())
+                        && Objects.equals(assignRequest.getRateName(), teacher.getTeacherRate())) {
+                    throw new AssignException("This teacher already has assigned events!");
+                }
 
-            Category category = categoryRepository.findByCategoryName(assignRequest.getCategoryName());
-            if (category!=null) {
-                Status status = statusRepository.findByStatusNameAndCategoryId(assignRequest.getStatusName(), category.getCategoryId());
-                if (status!=null) {
-                    Department department = departmentRepository.findByDepartmentName(assignRequest.getDepartmentName());
-                    if (department != null) {
-                        TeacherRate teacherRate = teacherRateRepository.findTeacherRateByName(assignRequest.getRateName());
-                        if (teacherRate != null) {
-                            teacher.setDepartment(department);
-                            teacher.setTeacherRate(teacherRate);
+                Category category = categoryRepository.findByCategoryName(assignRequest.getCategoryName());
+                if (category != null) {
+                    Status status = statusRepository.findByStatusNameAndCategoryId(assignRequest.getStatusName(), category.getCategoryId());
+                    if (status != null) {
+                        Department department = departmentRepository.findByDepartmentName(assignRequest.getDepartmentName());
+                        if (department != null) {
+                            TeacherRate teacherRate = teacherRateRepository.findTeacherRateByName(assignRequest.getRateName());
+                            if (teacherRate != null) {
+                                teacher.setDepartment(department);
+                                teacher.setTeacherRate(teacherRate);
 
-                            if (teacher.getCategoryName()!=null && teacher.getStatusName()!=null) {
-                                Category existingCategory = categoryRepository.findByCategoryName(teacher.getCategoryName());
-                                Status existingStatus = statusRepository.findByStatusNameAndCategoryId(teacher.getStatusName(), existingCategory.getCategoryId());
-                                if (existingStatus != status) {
-                                    teacherEventRepository.deleteByTeacherAndEventId(teacher.getTeacherId());
+                                if (teacher.getCategoryName() != null && teacher.getStatusName() != null) {
+                                    Category existingCategory = categoryRepository.findByCategoryName(teacher.getCategoryName());
+                                    Status existingStatus = statusRepository.findByStatusNameAndCategoryId(teacher.getStatusName(), existingCategory.getCategoryId());
+                                    if (existingStatus != status) {
+                                        teacherEventRepository.deleteByTeacherAndEventId(teacher.getTeacherId());
+                                    }
                                 }
-                            }
 
-                            teacher.setCategoryName(assignRequest.getCategoryName());
-                            teacher.setStatusName(assignRequest.getStatusName());
-                            teacherRepository.save(teacher);
+                                teacher.setCategoryName(assignRequest.getCategoryName());
+                                teacher.setStatusName(assignRequest.getStatusName());
+                                teacherRepository.save(teacher);
 
-                            List<Event> eventList = eventRepository.findByStatusId(status.getStatusId());
-                            for (Event event : eventList){
-                                TeacherEvent teacherEvent = teacherEventRepository.findEventAndTeacherId(teacher.getTeacherId(),event.getEventId());
-                                if (teacherEvent==null){
-                                    TeacherEventId teacherEventId = new TeacherEventId(teacher.getTeacherId(),event.getEventId());
-                                    Approve approve = approveRepository.findApproveByName("none");
-                                    teacherEvent = new TeacherEvent(teacherEventId,teacher,event,approve);
-                                }
-                                String input = event.getEventRates();
-                                boolean hasSlash = input.contains("/");
+                                List<Event> eventList = eventRepository.findByStatusId(status.getStatusId());
+                                for (Event event : eventList) {
+                                    TeacherEvent teacherEvent = teacherEventRepository.findEventAndTeacherId(teacher.getTeacherId(), event.getEventId());
+                                    if (teacherEvent == null) {
+                                        TeacherEventId teacherEventId = new TeacherEventId(teacher.getTeacherId(), event.getEventId());
+                                        Approve approve = approveRepository.findApproveByName("none");
+                                        teacherEvent = new TeacherEvent(teacherEventId, teacher, event, approve);
+                                    }
+                                    String input = event.getEventRates();
+                                    boolean hasSlash = input.contains("/");
                                     if (hasSlash) {
                                         String[] parts = input.split("/");
-                                        String numberBeforeSlash = parts[teacher.getTeacherRateId()-1];
+                                        String numberBeforeSlash = parts[teacher.getTeacherRateId() - 1];
                                         teacherEvent.setEventRate(numberBeforeSlash);
                                     } else {
                                         teacherEvent.setEventRate(input);
+                                    }
+                                    teacherEventRepository.save(teacherEvent);
                                 }
-                                teacherEventRepository.save(teacherEvent);
-                            }
+                            } else
+                                throw new AssignException("The " + assignRequest.getRateName() + " rate doesn't exist!");
                         } else
-                            throw new AssignException("The " + assignRequest.getRateName() + " rate doesn't exist!");
+                            throw new AssignException("The department with name " + assignRequest.getDepartmentName() + " doesn't exist!");
                     } else
-                        throw new AssignException("The department with name " + assignRequest.getDepartmentName() + " doesn't exist!");
-                }else
-                    throw new AssignException("The status with name " + assignRequest.getStatusName() + " doesn't exist!");
+                        throw new AssignException("The status with name " + assignRequest.getStatusName() + " doesn't exist!");
+                } else
+                    throw new AssignException("The category with name " + assignRequest.getCategoryName() + " doesn't exist!");
             }else
-                throw new AssignException("The category with name " + assignRequest.getCategoryName() + " doesn't exist!");
+                throw new AssignException("This user isn't a teacher!");
         }else
             throw new AssignException("User with email " + assignRequest.getEmail() + " doesn't exist!");
     }

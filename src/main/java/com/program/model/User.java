@@ -2,6 +2,7 @@ package com.program.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 //import com.program.model.audit.DateAudit;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.program.model.role.ERole;
 import com.program.model.role.Role;
 import lombok.Data;
@@ -116,9 +117,16 @@ public class User {
         this.password = password;
     }
 
-//    @JsonIgnore
+    @JsonIgnore
     public Set<Role> getRoles() {
         return roles;
+    }
+
+    @JsonProperty("roles")
+    public List<ERole> getRolesByString(){
+        return roles.stream()
+                .map(Role::getName)
+                .collect(Collectors.toList());
     }
 
     public void setRoles(Set<Role> roles) {

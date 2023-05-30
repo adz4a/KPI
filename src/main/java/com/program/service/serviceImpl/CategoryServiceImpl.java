@@ -3,6 +3,8 @@ package com.program.service.serviceImpl;
 import java.util.List;
 import java.util.Optional;
 
+import com.program.exception.EventException;
+import com.program.exception.StatusException;
 import com.program.model.Event;
 import com.program.model.Status;
 import com.program.model.teacher.Teacher;
@@ -10,6 +12,7 @@ import com.program.repository.EventRepository;
 import com.program.repository.StatusRepository;
 import com.program.repository.TeacherRepository;
 import com.program.service.CategoryService;
+import com.program.service.StatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,10 +30,10 @@ public class  CategoryServiceImpl implements CategoryService {
 	private StatusRepository statusRepository;
 
 	@Autowired
-	private EventRepository eventRepository;
+	private TeacherRepository teacherRepository;
 
 	@Autowired
-	private TeacherRepository teacherRepository;
+	private StatusService statusService;
 
 
 	@Override
@@ -75,56 +78,30 @@ public class  CategoryServiceImpl implements CategoryService {
 		}
 		Category existingCategory = optionalCategory.get();
 
-		List<Status> statuses = statusRepository.findByCategoryId(existingCategory.getCategoryId());
 //		List<Teacher> teachers = teacherRepository.findByCategoryName(existingCategory.getCategoryName());
+//		if (!teachers.isEmpty()){
+//			for (Teacher teacher : teachers) {
+////				Setter
+//				teacher.setCategoryName(existingCategory.getCategoryName());
+//			}
+//		}
 //		Setter
 		existingCategory.setCategoryName(category.getCategoryName());
 		categoryRepository.save(existingCategory);
-//		if (!statuses.isEmpty()){
-////			for (Status status : statuses) {
-//////				Setter
-////				List<Event> events = eventRepository.findByStatusId(status.getStatusId());
-//////				if (!events.isEmpty()){
-//////					for (Event event : events)
-////////						Setter
-//////						event.setEventCategory(existingCategory.getCategoryName());
-//////				}
-//////				if (!teachers.isEmpty()){
-//////					for (Teacher teacher : teachers) {
-////////						Setter
-//////						teacher.setCategoryName(existingCategory.getCategoryName());
-//////					}
-//////				}
-////			}
-//		} else {
-//			return null;
-//		}
+
 	}
 
 
 	@Override
-	public void deleteCategoryById(Integer id) throws CategoryException {
+	public void deleteCategoryById(Integer id) throws CategoryException, StatusException, EventException {
 		Optional<Category> opt = categoryRepository.findById(id);
 		if (opt.isPresent()) {
 			Category existingCategory = opt.get();
 			List<Status> statuses = statusRepository.findByCategoryId(existingCategory.getCategoryId());
 			if (!statuses.isEmpty()){
 				for (Status status : statuses) {
-					List<Event> events = eventRepository.findByStatusId(status.getStatusId());
-//					List<Teacher> teachers = teacherRepository.findByCategoryName(existingCategory.getCategoryName());
-					if (!events.isEmpty()){
-							eventRepository.deleteByStatusId(status.getStatusId());
-					}
-//					if (!teachers.isEmpty()){
-//						for (Teacher teacher : teachers) {
-////							Set null
-//							teacherRepository.resetCategoryNameAndStatusName(existingCategory.getCategoryName());
-//						}
-//					}
+					statusService.deleteStatusById(status.getStatusId());
 				}
-				statusRepository.deleteByCategoryId(id);
-			} else {
-				throw new CategoryException("Statuses with this id empty");
 			}
 			categoryRepository.deleteByCategoryId(id);
 		} else {

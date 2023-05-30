@@ -28,7 +28,7 @@ public class TeacherEventController {
 
     @GetMapping("event/{eventId}/teachers")
     @PreAuthorize("hasRole('ADMIN') or hasRole('OBSERVER')")
-    public ResponseEntity getTeachersByEvents( @PathVariable("eventId") Integer eventId ) throws TeacherEventException {
+    public ResponseEntity getTeachersByEvents( @PathVariable("eventId") Integer eventId ) {
         try {
             List<TeacherEvent> teacherEvents = teacherEventService.getTeachersByEvent(eventId);
             return new ResponseEntity<List<TeacherEvent>>(teacherEvents, HttpStatus.OK);
