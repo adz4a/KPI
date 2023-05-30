@@ -1,8 +1,10 @@
 package com.program.controller;
 
 import com.program.exception.DepartmentException;
+import com.program.exception.TeacherRateException;
 import com.program.model.Department;
-import com.program.service.DepartmentService;
+import com.program.model.teacher.TeacherRate;
+import com.program.service.RateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,28 +16,27 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-public class DepartmentController {
+public class RateController {
 
     @Autowired
-    public DepartmentService departmentService;
+    public RateService rateService;
 
-    @GetMapping("/departments")
+    @GetMapping("/rates")
     @PreAuthorize("hasRole('ADMIN') or hasRole('OBSERVER')")
-    public ResponseEntity<List<Department>> getAllDepartments() throws DepartmentException {
-        List<Department> departments = departmentService.findAllDepartments();
-        return new ResponseEntity<List<Department>>(departments, HttpStatus.OK);
+    public ResponseEntity<List<TeacherRate>> getAllRates() throws TeacherRateException {
+        List<TeacherRate> teacherRates = rateService.findAllRate();
+        return new ResponseEntity<List<TeacherRate>>(teacherRates, HttpStatus.OK);
     }
 
-    @GetMapping("/department/getById/{Id}")
+    @GetMapping("/rate/getById/{Id}")
     @PreAuthorize("hasRole('ADMIN') or hasRole('OBSERVER')")
-    public ResponseEntity getDepartmentById(@PathVariable("Id") Integer id ){
+    public ResponseEntity getRateById(@PathVariable("Id") Integer id ){
         try {
-            Department department = departmentService.getDepartmentById(id);
-            return new ResponseEntity<Department>(department,HttpStatus.OK);
-        }catch (DepartmentException ex){
+            TeacherRate teacherRate = rateService.getRateById(id);
+            return new ResponseEntity<TeacherRate>(teacherRate,HttpStatus.OK);
+        }catch (TeacherRateException ex){
             String errorMessage = "Error: " + ex.getMessage();
             return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 }
