@@ -3,6 +3,8 @@ package com.program.service.serviceImpl;
 import com.program.exception.AssignException;
 import com.program.model.*;
 import com.program.model.approve.Approve;
+import com.program.model.submission.Submission;
+import com.program.model.submission.TeacherSubmission;
 import com.program.model.teacher.Teacher;
 import com.program.model.teacher.TeacherEvent;
 import com.program.model.teacher.TeacherEventId;
@@ -13,6 +15,7 @@ import com.program.service.AssignService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -45,6 +48,12 @@ public class AssignServiceImpl implements AssignService {
 
     @Autowired
     private ApproveRepository approveRepository;
+
+    @Autowired
+    private SubmissionRepository submissionRepository;
+
+    @Autowired
+    private TeacherSubmissionRepository teacherSubmissionRepository;
 
 
     @Override
@@ -80,6 +89,21 @@ public class AssignServiceImpl implements AssignService {
                                     Status existingStatus = statusRepository.findByStatusNameAndCategoryId(teacher.getStatusName(), existingCategory.getCategoryId());
                                     if (existingStatus != status) {
                                         teacherEventRepository.deleteByTeacherAndEventId(teacher.getTeacherId());
+                                        List<Event> eventList = eventRepository.findByStatusId(existingStatus.getStatusId());
+                                        for (Event event : eventList) {
+                                            List<TeacherSubmission> teacherSubmissionList = teacherSubmissionRepository.findTeacherSubmissionsById(teacher.getTeacherId(), event.getEventId());
+                                            if (!teacherSubmissionList.isEmpty()) {
+                                                List<Submission> submissionList = new ArrayList<>();
+                                                for (TeacherSubmission teacherSubmission : teacherSubmissionList) {
+                                                    submissionList.add(submissionRepository.findBySubmissionId(teacherSubmission.getSubmissionId()));
+                                                }
+                                                teacherSubmissionRepository.deleteByEventId(event.getEventId());
+                                                for (Submission submission : submissionList) {
+                                                    submissionRepository.deleteBySubmissionId(submission.getSubmissionId());
+                                                }
+                                            }
+
+                                        }
                                     }
                                 }
 

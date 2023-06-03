@@ -88,7 +88,7 @@ public class SubmissionServiceImpl implements SubmissionService {
             }
             return submissions;
         }else
-            throw new SubmissionException("This teacher doesn't have submissions or events");
+            return null;
     }
 
     @Override
