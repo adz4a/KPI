@@ -3,6 +3,7 @@ package com.program.controller.teacher;
 import com.program.exception.TeacherEventException;
 import com.program.model.approve.Approve;
 import com.program.model.teacher.TeacherEvent;
+import com.program.payload.response.EventDetailResponse;
 import com.program.service.TeacherEventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -49,6 +50,19 @@ public class TeacherEventController {
             String errorMessage = "Error setting the event approve status: " + ex.getMessage();
             return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @GetMapping("event/{eventId}/teacher/{teacherId}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('OBSERVER')")
+    public ResponseEntity getEventDetail( @PathVariable("eventId") Integer eventId,@PathVariable("teacherId") Long teacherId ) {
+        try {
+            EventDetailResponse eventDetailResponse = teacherEventService.getEventDetail(eventId,teacherId);
+            return new ResponseEntity<>(eventDetailResponse, HttpStatus.OK);
+        }catch (TeacherEventException ex){
+            String errorMessage = "Error: " + ex.getMessage();
+            return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
 

@@ -4,6 +4,7 @@ import com.program.exception.TeacherEventException;
 import com.program.exception.TeacherException;
 import com.program.model.approve.Approve;
 import com.program.model.teacher.TeacherEvent;
+import com.program.payload.response.EventDetailResponse;
 
 import java.util.List;
 
@@ -18,6 +19,8 @@ public interface TeacherEventService {
     void addComment(Long userId, Integer eventId, String comment) throws TeacherEventException;
 
     void deleteComment(Long userId, Integer eventId) throws TeacherEventException;
+
+    EventDetailResponse getEventDetail(Integer eventId, Long teacherId) throws TeacherEventException;
 
 
 }

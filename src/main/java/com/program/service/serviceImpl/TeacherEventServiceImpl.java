@@ -3,11 +3,13 @@ package com.program.service.serviceImpl;
 import com.program.exception.TeacherEventException;
 import com.program.exception.TeacherException;
 import com.program.model.approve.Approve;;
+import com.program.model.submission.Submission;
+import com.program.model.submission.TeacherSubmission;
 import com.program.model.teacher.Teacher;
 import com.program.model.teacher.TeacherEvent;
-import com.program.repository.ApproveRepository;
-import com.program.repository.TeacherEventRepository;
-import com.program.repository.TeacherRepository;
+import com.program.payload.response.EventDetailResponse;
+import com.program.payload.response.SubmissionResponseData;
+import com.program.repository.*;
 import com.program.service.TeacherEventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,6 +31,12 @@ public class TeacherEventServiceImpl implements TeacherEventService {
 
     @Autowired
     private ApproveRepository approveRepository;
+
+    @Autowired
+    private TeacherSubmissionRepository teacherSubmissionRepository;
+
+    @Autowired
+    private SubmissionRepository submissionRepository;
 
 
     @Override
@@ -111,6 +119,19 @@ public class TeacherEventServiceImpl implements TeacherEventService {
         }
         existingTeacherEvent.setComment(null);
         teacherEventRepository.save(existingTeacherEvent);
+    }
+
+    @Override
+    public EventDetailResponse getEventDetail(Integer eventId, Long teacherId) throws TeacherEventException {
+        TeacherEvent teacherEvent = teacherEventRepository.findEventAndTeacherId(teacherId,eventId);
+        EventDetailResponse eventDetailResponse = new EventDetailResponse();
+        eventDetailResponse.setTeacherEvent(teacherEvent);
+        List<TeacherSubmission> teacherSubmissionList = teacherSubmissionRepository.findTeacherSubmissionsById(teacherId, eventId);
+        eventDetailResponse.setTeacherSubmissionList(teacherSubmissionList);
+        return  eventDetailResponse;
+
+
+
     }
 
 
