@@ -27,6 +27,10 @@ public interface TeacherRepository extends JpaRepository<Teacher, Long> {
     @Query("SELECT t FROM Teacher t WHERE t.categoryName = :categoryName and t.statusName = :statusName")
     List<Teacher> findByCategoryAndStatusName(String categoryName, String statusName);
 
+    @Modifying
+    @Query("DELETE FROM Teacher t WHERE t.teacherId = :teacherId")
+    void deleteByTeacherId(Long teacherId);
+
 //    @Modifying
 //    @Query("UPDATE Teacher t SET t.statusName = null WHERE t.categoryName = :categoryName and t.statusName = :statusName")
 //    void resetStatusName(String categoryName, String statusName);

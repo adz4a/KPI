@@ -1,7 +1,11 @@
 package com.program.controller;
 
+import com.program.exception.CategoryException;
+import com.program.exception.EventException;
+import com.program.exception.StatusException;
 import com.program.exception.UserException;
 import com.program.model.User;
+import com.program.payload.request.UpdateUserRequest;
 import com.program.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,17 +40,41 @@ public class UserController {
         }
     }
 
-    @PostMapping("/user/update/{id}")
+    @GetMapping("/user/update/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity updateUserById( @PathVariable Long id, @RequestBody User user){
+    public ResponseEntity GetUpdateUserById( @PathVariable Long id){
         try {
-            User user1=	userService.updateUser(id,user);
-            return new ResponseEntity<User>(user1,HttpStatus.OK);
+            User user = userService.getUserById(id);
+            return new ResponseEntity<>(user,HttpStatus.OK);
         }catch (UserException ex){
             String errorMessage = "Error: " + ex.getMessage();
             return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
+    }
+    @PutMapping("/user/update/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity updateUserById( @PathVariable Long id, @RequestBody UpdateUserRequest updateUserRequest){
+        try {
+           	userService.updateUser(id,updateUserRequest);
+            return new ResponseEntity<>("The user updated successfully!",HttpStatus.OK);
+        }catch (UserException ex){
+            String errorMessage = "Error: " + ex.getMessage();
+            return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+    @DeleteMapping("/user/delete/{Id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Object> deleteUserById(@PathVariable ("Id") Long id){
+        try {
+            userService.deleteUser(id);
+            return new ResponseEntity<>("User with this id deleted", HttpStatus.OK);
+        }catch (UserException ex) {
+            String errorMessage = "Error setting: " + ex.getMessage();
+            return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 

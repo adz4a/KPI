@@ -4,6 +4,7 @@ import com.program.exception.UserException;
 import com.program.model.User;
 import com.program.payload.request.AssignRequest;
 import com.program.payload.request.RegisterRequest;
+import com.program.payload.request.UpdateUserRequest;
 
 import java.util.List;
 
@@ -25,7 +26,7 @@ public interface UserService {
 
     User getUserById(Long userId) throws UserException;
 
-    User updateUser(Long id, User user) throws UserException;
+    void updateUser(Long id, UpdateUserRequest updateUserRequest) throws UserException;
 
     void registerUser(RegisterRequest registerRequest) throws UserException;
 

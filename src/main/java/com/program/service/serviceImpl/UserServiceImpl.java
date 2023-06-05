@@ -5,10 +5,13 @@ import com.program.exception.UserException;
 import com.program.model.role.ERole;
 import com.program.model.role.Role;
 import com.program.model.User;
-import com.program.payload.request.AssignRequest;
+import com.program.model.submission.Submission;
+import com.program.model.submission.TeacherSubmission;
+import com.program.model.teacher.Teacher;
+import com.program.model.teacher.TeacherEvent;
 import com.program.payload.request.RegisterRequest;
-import com.program.repository.RoleRepository;
-import com.program.repository.UserRepository;
+import com.program.payload.request.UpdateUserRequest;
+import com.program.repository.*;
 import com.program.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -35,6 +38,19 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private PasswordEncoder encoder;
+
+    @Autowired
+    private TeacherRepository teacherRepository;
+
+    @Autowired
+    private TeacherEventRepository teacherEventRepository;
+
+    @Autowired
+    private TeacherSubmissionRepository teacherSubmissionRepository;
+
+    @Autowired
+    private SubmissionRepository submissionRepository;
+
 
 
     @Override
@@ -91,16 +107,52 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUser(Long id, User user) throws UserException {
+    public void updateUser(Long id, UpdateUserRequest updateUserRequest) throws UserException {
 
-        Optional<User> opt = userRepository.findById(id);
+        User existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new UserException("User not found"));
 
-        if (opt.isPresent())
-        {
-            return userRepository.save(user);
-        }else {
-            throw new UserException("User with given id is not present........");
+        if (!Objects.equals(existingUser.getEmail(), updateUserRequest.getEmail())) {
+            if (existsByEmail(updateUserRequest.getEmail())) {
+                throw new UserException("User with this email already exist!");
+            }
         }
+        existingUser.setEmail(updateUserRequest.getEmail());
+        existingUser.setName(updateUserRequest.getUsername());
+
+
+//        if (!encoder.matches(user.getPassword(), existingUser.getPassword())) {
+//            existingUser.setPassword(encoder.encode(user.getPassword()));
+//        }
+
+        Set<String> strRoles = updateUserRequest.getRole();
+        Set<Role> roles = new HashSet<>();
+        if (strRoles == null) {
+            throw new UserException("Role is not found! Please indicate role!");
+        } else {
+            strRoles.forEach(role -> {
+                switch (role) {
+                    case "Admin" -> {
+                        Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                        roles.add(adminRole);
+                    }
+                    case "Observer" -> {
+                        Role modRole = roleRepository.findByName(ERole.ROLE_OBSERVER)
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                        roles.add(modRole);
+                    }
+                    case "Teacher" -> {
+                        Role userRole = roleRepository.findByName(ERole.ROLE_TEACHER)
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                        roles.add(userRole);
+                    }
+                }
+            });
+        }
+
+        existingUser.setRoles(roles);
+        userRepository.save(existingUser);
     }
 
     @Override
@@ -143,8 +195,34 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(Long id) throws UserException {
-        User user = userRepository.getOne(id);
-        userRepository.delete(user);
+        Optional<User> opt = userRepository.findById(id);
+        if (opt.isPresent()) {
+            User user = opt.get();
+            Teacher teacher = teacherRepository.findByUserId(user.getUserId());
+            if (teacher!=null){
+
+                List<TeacherEvent> teacherEventList = teacherEventRepository.findEventsByTeacherId(teacher.getTeacherId());
+                if (!teacherEventList.isEmpty()){
+                    teacherEventRepository.deleteByTeacherAndEventId(teacher.getTeacherId());
+                }
+
+                List<TeacherSubmission> teacherSubmissionList = teacherSubmissionRepository.findByTeacherId(teacher.getTeacherId());
+                if (!teacherSubmissionList.isEmpty()) {
+                    List<Submission> submissionList = new ArrayList<>();
+                    for (TeacherSubmission teacherSubmission : teacherSubmissionList) {
+                        submissionList.add(submissionRepository.findBySubmissionId(teacherSubmission.getSubmissionId()));
+                    }
+                    teacherSubmissionRepository.deleteByTeacherId(teacher.getTeacherId());
+                    for (Submission submission : submissionList) {
+                        submissionRepository.deleteBySubmissionId(submission.getSubmissionId());
+                    }
+                }
+                teacherRepository.deleteByTeacherId(teacher.getTeacherId());
+            }
+
+            userRepository.deleteByUserId(id);
+        }else
+            throw new UserException("The user with id: " + id + " doesn't exist!");
     }
 
 
