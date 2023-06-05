@@ -53,7 +53,7 @@ public class TeacherEventController {
     }
 
     @GetMapping("event/{eventId}/teacher/{teacherId}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('OBSERVER')")
+//    @PreAuthorize("hasRole('ADMIN') or hasRole('OBSERVER')")
     public ResponseEntity getEventDetail( @PathVariable("eventId") Integer eventId,@PathVariable("teacherId") Long teacherId ) {
         try {
             EventDetailResponse eventDetailResponse = teacherEventService.getEventDetail(eventId,teacherId);
