@@ -81,7 +81,7 @@ public class User {
 //        }
 //    }
 
-    @JsonIgnore
+    @JsonProperty("user_id")
     public Long getUserId() {
         return userId;
     }
