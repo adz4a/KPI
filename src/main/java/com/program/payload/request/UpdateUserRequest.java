@@ -1,5 +1,7 @@
 package com.program.payload.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -26,6 +28,7 @@ public class UpdateUserRequest {
         this.email = email;
     }
 
+    @JsonProperty("name")
     public String getUsername() {
         return username;
     }
@@ -34,6 +37,7 @@ public class UpdateUserRequest {
         this.username = username;
     }
 
+    @JsonProperty("roles")
     public Set<String> getRole() {
         return this.role;
     }
