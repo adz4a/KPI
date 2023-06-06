@@ -77,7 +77,7 @@ public class UserServiceImpl implements UserService {
                 usersToRemove.add(user);
             }
         }
-
+        users.removeIf(User::isAdmin);
         users.removeAll(usersToRemove);
         return users;
     }
