@@ -27,6 +27,12 @@ public interface TeacherRepository extends JpaRepository<Teacher, Long> {
     @Query("SELECT t FROM Teacher t WHERE t.categoryName = :categoryName and t.statusName = :statusName")
     List<Teacher> findByCategoryAndStatusName(String categoryName, String statusName);
 
+    @Query("SELECT t FROM Teacher t WHERE t.department.departmentId = :departmentId and t.categoryName = :categoryName and t.statusName = :statusName")
+    List<Teacher> findByDepartmentAndCategoryAndStatusName(Integer departmentId,String categoryName, String statusName);
+
+    @Query("SELECT t FROM Teacher t WHERE t.department.departmentId = :departmentId and  t.categoryName = :categoryName")
+    List<Teacher> findByDepartmentAndCategory(Integer departmentId,String categoryName);
+
     @Query("SELECT t FROM Teacher t WHERE t.department.departmentId = :departmentId")
     List<Teacher> findByDepartment(Integer departmentId);
 

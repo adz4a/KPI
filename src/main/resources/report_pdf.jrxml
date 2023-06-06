@@ -21,6 +21,7 @@
 	<field name="acceptedEvents" class="java.lang.Integer"/>
 	<field name="rejectedEvents" class="java.lang.Integer"/>
 	<field name="leftEvents" class="java.lang.Integer"/>
+	<field name="kpiSum" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -57,7 +58,7 @@
 	<columnHeader>
 		<band height="55" splitType="Stretch">
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="388" y="25" width="46" height="30" isPrintWhenDetailOverflows="true" forecolor="#FFFFFF" backcolor="#227EAD" uuid="e1685272-bfb3-4817-bd02-ce800b9ea577">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="388" y="25" width="42" height="30" isPrintWhenDetailOverflows="true" forecolor="#FFFFFF" backcolor="#227EAD" uuid="e1685272-bfb3-4817-bd02-ce800b9ea577">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5f1c3336-49b2-4108-a923-85a341b6c863"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -93,7 +94,7 @@
 				<textFieldExpression><![CDATA["Department"]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="434" y="25" width="46" height="30" isPrintWhenDetailOverflows="true" forecolor="#FFFFFF" backcolor="#227EAD" uuid="be892040-65ea-4a39-b8a1-40cfb62ee240">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="430" y="25" width="39" height="30" isPrintWhenDetailOverflows="true" forecolor="#FFFFFF" backcolor="#227EAD" uuid="be892040-65ea-4a39-b8a1-40cfb62ee240">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="c81fbf5f-0c64-4e04-9438-efaa12b20c43"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -111,7 +112,7 @@
 				<textFieldExpression><![CDATA["Rejected"]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="480" y="25" width="56" height="30" isPrintWhenDetailOverflows="true" forecolor="#FFFFFF" backcolor="#227EAD" uuid="6337169d-3ac2-48d6-bb73-cf46fd02fb79">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="469" y="25" width="47" height="30" isPrintWhenDetailOverflows="true" forecolor="#FFFFFF" backcolor="#227EAD" uuid="6337169d-3ac2-48d6-bb73-cf46fd02fb79">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="45ee3125-7784-4af2-8d19-2b8e0bc01cc2"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -200,10 +201,28 @@
 				</textElement>
 				<textFieldExpression><![CDATA["Username"]]></textFieldExpression>
 			</textField>
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="516" y="25" width="47" height="30" isPrintWhenDetailOverflows="true" forecolor="#FFFFFF" backcolor="#227EAD" uuid="1540d652-8e2e-4249-a335-e3da73c43927">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="45ee3125-7784-4af2-8d19-2b8e0bc01cc2"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box topPadding="2" bottomPadding="2" rightPadding="3">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#F5F5F5"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#F5F5F5"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#F5F5F5"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#F5F5F5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["KPI"]]></textFieldExpression>
+			</textField>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="40" splitType="Stretch">
+		<band height="45" splitType="Stretch">
 			<textField isBlankWhenNull="true">
 				<reportElement x="280" y="0" width="108" height="40" uuid="ee1afc03-8f95-4456-8ae0-634aee329716">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="95225fb0-6a1c-4074-bb89-5408287ee040"/>
@@ -221,7 +240,7 @@
 				<textFieldExpression><![CDATA[$F{departmentName}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="388" y="0" width="46" height="40" uuid="8ed24c4d-c682-47a7-902e-848edad41b98">
+				<reportElement x="388" y="0" width="42" height="40" uuid="8ed24c4d-c682-47a7-902e-848edad41b98">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="3153aa11-34bc-48cf-a950-658204da8a54"/>
 				</reportElement>
 				<box>
@@ -237,7 +256,7 @@
 				<textFieldExpression><![CDATA[$F{acceptedEvents}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement x="480" y="0" width="56" height="40" uuid="60326bf0-1c39-418a-9a70-2f63466dd245">
+				<reportElement x="469" y="0" width="47" height="40" uuid="60326bf0-1c39-418a-9a70-2f63466dd245">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0d82c00c-dc52-4a0d-b3bf-5188ba7a0e25"/>
 				</reportElement>
 				<box rightPadding="3">
@@ -253,7 +272,7 @@
 				<textFieldExpression><![CDATA[$F{leftEvents}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="434" y="0" width="46" height="40" uuid="68a14675-14ab-4473-ae9f-9b79f19d1397">
+				<reportElement x="430" y="0" width="39" height="40" uuid="68a14675-14ab-4473-ae9f-9b79f19d1397">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="3153aa11-34bc-48cf-a950-658204da8a54"/>
 				</reportElement>
 				<box>
@@ -331,6 +350,22 @@
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{username}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<reportElement x="516" y="0" width="47" height="40" uuid="be446047-e5b4-485a-913c-7b1d7ebb6021">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0d82c00c-dc52-4a0d-b3bf-5188ba7a0e25"/>
+				</reportElement>
+				<box rightPadding="3">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#F5F5F5"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#EEEEEE"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#EEEEEE"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#EEEEEE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{kpiSum}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

@@ -1,8 +1,11 @@
 package com.program.service.reportGenerate;
 
+import com.program.exception.CategoryException;
 import com.program.exception.DepartmentException;
 import com.program.helper.report.ExportType;
+import com.program.model.Category;
 import com.program.model.Department;
+import com.program.model.Status;
 import com.program.model.teacher.Teacher;
 import com.program.model.teacher.TeacherEvent;
 import com.program.payload.response.ReportResponse;
@@ -46,39 +49,99 @@ public class ReportGenerationServiceImpl implements ReportGenerationService{
     @Autowired
     private ApproveRepository approveRepository;
 
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    @Autowired
+    private StatusRepository statusRepository;
+
 
 
 
     @Override
     public void getByDepartment(Integer id,ExportType exportType, HttpServletResponse response) throws DepartmentException,JRException, IOException {
         Department department = departmentRepository.findByDepartmentId(id);
-        List<ReportResponse> reportResponseList = new ArrayList<>();
         if (department!=null) {
             List<Teacher> teacherList = teacherRepository.findByDepartment(department.getDepartmentId());
-                for (Teacher teacher : teacherList) {
-                List<TeacherEvent> teacherEventList = teacherEventRepository.findEventsByTeacherId(teacher.getTeacherId());
-                int rejectedEvents = 0;
-                int acceptedEvents = 0;
-                int leftEvents = 0;
-                for (TeacherEvent teacherEvent:teacherEventList){
-                    if (teacherEvent.isAccept()){
-                        rejectedEvents++;
-                    }
-                    if (teacherEvent.isReject()){
-                        rejectedEvents++;
-                    }
-                    if (teacherEvent.isNone()){
-                        leftEvents++;
-                    }
-                }
-                    ReportResponse newReportResponse = new ReportResponse(teacher.getUserName(), teacher.getUserEmail(), teacher.getCategoryName(), teacher.getStatusName(), teacher.getDepartmentName(), acceptedEvents, rejectedEvents, leftEvents);
-                    reportResponseList.add(newReportResponse);
-                }
+
+            List<ReportResponse> reportResponseList = getReportResponseValues(teacherList);
+            exportReport(reportResponseList,exportType,response);
             exportReport(reportResponseList,exportType,response);
         }
 
         }
 
+    @Override
+    public void getByCategory(Integer id, ExportType exportType, HttpServletResponse response) throws CategoryException, JRException, IOException {
+        Category category = categoryRepository.findByCategoryId(id);
+        if (category!=null) {
+            List<Teacher> teacherList = teacherRepository.findByCategoryName(category.getCategoryName());
+            List<ReportResponse> reportResponseList = getReportResponseValues(teacherList);
+            exportReport(reportResponseList,exportType,response);
+        }
+
+    }
+
+    @Override
+    public void getByCategoryAndStatus(Integer categoryId, Integer statusId, ExportType exportType, HttpServletResponse response) throws JRException, IOException {
+        Category category = categoryRepository.findByCategoryId(categoryId);
+        Status status = statusRepository.findByStatusId(statusId);
+        if (category!=null && status!=null) {
+            List<Teacher> teacherList = teacherRepository.findByCategoryAndStatusName(category.getCategoryName(), status.getStatusName());
+            List<ReportResponse> reportResponseList = getReportResponseValues(teacherList);
+            exportReport(reportResponseList,exportType,response);
+        }
+    }
+
+    @Override
+    public void getByDepartmentAndCategoryAndStatus(Integer departmentId, Integer categoryId, Integer statusId, ExportType exportType, HttpServletResponse response) throws JRException, IOException {
+        Department department = departmentRepository.findByDepartmentId(departmentId);
+        Category category = categoryRepository.findByCategoryId(categoryId);
+        Status status = statusRepository.findByStatusId(statusId);
+        if (category!=null && status!=null && department!=null) {
+            List<Teacher> teacherList = teacherRepository.findByDepartmentAndCategoryAndStatusName(department.getDepartmentId(),category.getCategoryName(), status.getStatusName());
+            List<ReportResponse> reportResponseList = getReportResponseValues(teacherList);
+            exportReport(reportResponseList,exportType,response);
+        }
+    }
+
+
+    @Override
+    public void getByDepartmentAndCategory(Integer departmentId, Integer categoryId, ExportType exportType, HttpServletResponse response) throws JRException, IOException {
+        Department department = departmentRepository.findByDepartmentId(departmentId);
+        Category category = categoryRepository.findByCategoryId(categoryId);
+        if (category!=null && department!=null) {
+            List<Teacher> teacherList = teacherRepository.findByDepartmentAndCategory(department.getDepartmentId(),category.getCategoryName());
+            List<ReportResponse> reportResponseList = getReportResponseValues(teacherList);
+            exportReport(reportResponseList,exportType,response);
+        }
+    }
+
+
+    private List<ReportResponse> getReportResponseValues(List<Teacher> teacherList){
+        List<ReportResponse> reportResponseList = new ArrayList<>();
+        for (Teacher teacher : teacherList) {
+            List<TeacherEvent> teacherEventList = teacherEventRepository.findEventsByTeacherId(teacher.getTeacherId());
+            int rejectedEvents = 0;
+            int acceptedEvents = 0;
+            int leftEvents = 0;
+            for (TeacherEvent teacherEvent:teacherEventList){
+                if (teacherEvent.isAccept()){
+                    acceptedEvents++;
+                }
+                if (teacherEvent.isReject()){
+                    rejectedEvents++;
+                }
+                if (teacherEvent.isNone()){
+                    leftEvents++;
+                }
+            }
+            String kpi = teacher.getKpiSum() + "%";
+            ReportResponse newReportResponse = new ReportResponse(teacher.getUserName(), teacher.getUserEmail(), teacher.getCategoryName(), teacher.getStatusName(), teacher.getDepartmentName(), acceptedEvents, rejectedEvents, leftEvents, kpi);
+            reportResponseList.add(newReportResponse);
+        }
+        return reportResponseList;
+    }
 
     private void exportReport(Collection<?> beanCollection, ExportType exportType, HttpServletResponse response) throws JRException, IOException {
         InputStream transactionReportStream =

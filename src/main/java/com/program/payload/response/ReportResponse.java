@@ -18,8 +18,10 @@ public class ReportResponse {
 
     private Integer leftEvents;
 
+    private String kpiSum;
 
-    public ReportResponse(String username, String email, String categoryName, String statusName, String departmentName, Integer acceptedEvents, Integer rejectedEvents, Integer leftEvents) {
+
+    public ReportResponse(String username, String email, String categoryName, String statusName, String departmentName, Integer acceptedEvents, Integer rejectedEvents, Integer leftEvents,String kpiSum) {
         this.username = username;
         this.email = email;
         this.categoryName = categoryName;
@@ -28,6 +30,7 @@ public class ReportResponse {
         this.acceptedEvents = acceptedEvents;
         this.rejectedEvents = rejectedEvents;
         this.leftEvents = leftEvents;
+        this.kpiSum = kpiSum;
     }
 
     public String getUsername() {
@@ -92,5 +95,13 @@ public class ReportResponse {
 
     public void setLeftEvents(Integer leftEvents) {
         this.leftEvents = leftEvents;
+    }
+
+    public String getKpiSum() {
+        return kpiSum;
+    }
+
+    public void setKpiSum(String kpiSum) {
+        this.kpiSum = kpiSum;
     }
 }
