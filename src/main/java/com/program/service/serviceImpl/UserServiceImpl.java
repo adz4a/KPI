@@ -67,6 +67,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<User> findUsersExceptTeachers() throws UserException {
+        List<User> users = userRepository.findAll();
+        List<User> usersToRemove = new ArrayList<>();
+
+        for (User user : users) {
+            Teacher teacher = teacherRepository.findByUserId(user.getUserId());
+            if (teacher != null) {
+                usersToRemove.add(user);
+            }
+        }
+
+        users.removeAll(usersToRemove);
+        return users;
+    }
+
+    @Override
     public List<User> getUsersByRoleTeacher() throws UserException {
         List<User> users = userRepository.findAll();
         users.removeIf(user -> user.isAdmin() && user.isObserver());

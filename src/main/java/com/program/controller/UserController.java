@@ -28,6 +28,13 @@ public class UserController {
         return new ResponseEntity<List<User>>(users,HttpStatus.OK);
     }
 
+    @GetMapping("/users/except")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<User>> getUsersExceptTeachers() throws UserException {
+        List<User> users =	userService.findUsersExceptTeachers();
+        return new ResponseEntity<List<User>>(users,HttpStatus.OK);
+    }
+
     @GetMapping("/user/getById/{Id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity getUserById(@PathVariable("Id") Long id ) {
