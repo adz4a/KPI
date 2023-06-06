@@ -10,6 +10,7 @@ import com.program.model.teacher.TeacherEvent;
 import com.program.model.teacher.TeacherEventId;
 import com.program.model.teacher.TeacherRate;
 import com.program.payload.request.AssignRequest;
+import com.program.payload.request.EmailRequest;
 import com.program.repository.*;
 import com.program.service.AssignService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +56,15 @@ public class AssignServiceImpl implements AssignService {
     @Autowired
     private TeacherSubmissionRepository teacherSubmissionRepository;
 
+
+    @Override
+    public Teacher getTeacherDetail(EmailRequest emailRequest) throws AssignException {
+        User user = userRepository.findByEmail(emailRequest.getEmail());
+        if (user!=null){
+            return teacherRepository.findByUserId(user.getUserId());
+        }else
+            throw new AssignException("The user with email " + emailRequest.getEmail() + " doesn't exist!");
+    }
 
     @Override
     public void assignTeacherEvents(AssignRequest assignRequest) throws AssignException {
