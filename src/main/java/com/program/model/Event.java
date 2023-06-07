@@ -16,6 +16,9 @@ public class Event {
     private Integer eventId;
 
     private String eventName;
+
+    @Column(columnDefinition = "LONGTEXT")
+    private String eventDescription;
     private Integer eventPercentage;
     private String eventRates;
 
@@ -66,6 +69,19 @@ public class Event {
 
     public void setEventRates(String eventRates) {
         this.eventRates = eventRates;
+    }
+
+    @JsonProperty("event_description")
+    public String getEventDescription() {
+        return eventDescription;
+    }
+
+    public void setEventDescription(String eventDescription) {
+        this.eventDescription = eventDescription;
+    }
+
+    public List<TeacherEvent> getTeacherEvents() {
+        return teacherEvents;
     }
 
     public void setTeacherEvents(List<TeacherEvent> teacherEvents) {
