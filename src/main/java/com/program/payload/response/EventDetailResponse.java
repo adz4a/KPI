@@ -52,6 +52,11 @@ public class EventDetailResponse {
         return teacherEvent.isSubmissionStatus();
     }
 
+    @JsonProperty("event_description")
+    public String getEventDescription(){
+        return teacherEvent.getEventDescription();
+    }
+
     @JsonProperty("modify_date")
     @JsonFormat(pattern = "yyyy-mm-dd HH:mm")
     public Date getModifyDate() {

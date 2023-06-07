@@ -82,6 +82,11 @@ public class TeacherEvent {
         return event.getEventName();
     }
 
+    @JsonIgnore
+    public String getEventDescription() {
+        return event.getEventDescription();
+    }
+
     @JsonProperty("event_percentage")
     public Integer getEventPercentage(){
         return event.getEventPercentage();
